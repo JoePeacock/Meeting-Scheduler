@@ -12,5 +12,6 @@ CREATE TABLE IF NOT EXISTS events (
 	location VARCHAR(255),
 	description TEXT,
 	start TIMESTAMP,
-	end TIMESTAMP
+	end TIMESTAMP,
+	calid INT(8)
 );

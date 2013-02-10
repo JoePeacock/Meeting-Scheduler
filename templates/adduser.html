@@ -6,10 +6,19 @@
 
 <body>
 
-	<form method="POST">
+	{% if error %}
+	<p>{{ error }} </p>
+	{% endif %}
+
+	{% if output %}
+	<p>{{ output }} </p>
+	{% endif %}
+
+	<form method="POST" action="/adduser">
 		<P>Name: 
 		<input type="text" class="adduser" name="userName"></P>
 		<p>Title: 
 		<input type="text" class="adduser" name="userTitle"><p>
+		<input type="submit" value="create user">
 	</form>
 </body>	

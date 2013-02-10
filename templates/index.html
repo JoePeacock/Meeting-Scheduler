@@ -6,8 +6,14 @@
 
 <body>
 
+	<form method="post" action="/">
+		<input type="text" name='searchquery'>
+		<input type="submit" value ="search">
+	</form>
+
 	{% for user in user_list %}
-	<h3> {{ user.name }} </h3>
+	<h3> {{ user.name }} <br> {{ user.title }}</h3>
+	<a href="{{ url_for('deleteuser', userid = user.id) }}">Delete</a>
 	{% endfor %}
 
 </body>	

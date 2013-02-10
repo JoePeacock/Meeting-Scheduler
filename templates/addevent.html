@@ -11,6 +11,9 @@
 </head>
 
 <body>
+	{% if message %}
+	<p>{{ message }}</p>
+	{% endif %}
 
 	<form method="POST">
 		<P>Event Name: 
