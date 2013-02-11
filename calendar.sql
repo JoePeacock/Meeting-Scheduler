@@ -1,3 +1,14 @@
+/*
+
+This Meeting Scheduler is written by Joseph Peacock CEN/EE 2016' 
+For the University at Buffalo (SUNY) - Computer Science and Engineering Department 
+
+Date: Janurary 2013 
+Author: Joseph Peacock 
+Contact: japeacoc@buffalo.edu
+Page: calendar.sql
+
+*/
 CREATE TABLE IF NOT EXISTS users (
 	id SERIAL,
 	name VARCHAR(255),

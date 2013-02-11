@@ -1,3 +1,12 @@
+# This Meeting Scheduler is written by Joseph Peacock CEN/EE 2016' 
+# For the University at Buffalo (SUNY) - Computer Science and Engineering Department 
+#
+# Date: Janurary 2013 
+# Author: Joseph Peacock 
+# Contact: japeacoc@buffalo.edu
+# Page: app.py (Main application code) 
+
+
 import requests
 import os
 import flask
@@ -13,21 +22,22 @@ app = Flask(__name__)
 app.debug= True
 app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 
-
+# Connects to Database before anything else. Using the file config.py for the db connection
 @app.before_request
 def open_db():
-	g.db = Connection(config.DB_HOST,
-							 config.DB_NAME,
-							 config.DB_USER,
-							 config.DB_PASSWD)
+	g.db = Connection(config.DB_HOST, config.DB_NAME, config.DB_USER, config.DB_PASSWD)
 
-
+# After completing the request, the database is closed so there are not multiple connections. 
 @app.after_request
 def close_db(response):
 	g.db.close()
 	return response
 
 
+# def Hello()
+# Loads "index.html" 
+# No passed variable's
+# Function: List and search for users
 @app.route('/', methods=['POST', 'GET'])
 def hello():
 	if flask.request.method == 'POST':
@@ -40,24 +50,32 @@ def hello():
 	return flask.render_template('index.html', user_list = user_list)
 
 
+# def viewCalendar()
+# Renders "calendarview.html"
+# <username> string all lowercase matches username
+# Function: Displays the Calendar for a specific user
 @app.route('/calendar/<username>')
-def view_Calendar(username):
+def viewCalendar(username):
+	events = None
+	values = g.db.get('SELECT id, name from users where username = %s', username) 
+	print values
+	if values == None:
+		error =  "No User! It seems that you were trying to acces a page that doesn't exist!"
+		return flask.render_template("404.html", error=error)
+	else:
+		events = g.db.query('SELECT * FROM events WHERE calid = %s', str(values['id']))
+	return flask.render_template('viewcalendar.html', events = events, name = values['name'])
 
-	events = []
-	calendar = g.db.iter('select * from events')
-	for event in calendar:
-		item = event['name'] + ' ' + event['date'] + ' ' + event['start'] + ' ' + event['end']
-		events.append(item)
-	return flask.render_template('addevent.html', events = events)
 
-
-
-
+# def addEvent()
+# Loads "addevent.html"
+# <username> is the string all lowercase no spaces. If not found returns 404.
+# Function: Add's an event to a users calendar specified in the URL
 @app.route('/addevent/<username>', methods=["GET", "POST"])
 def addEvent(username):
 	message = None;
 	values = g.db.get('SELECT username, id from users where username = %s', username) 
-	if len(values) == 0:
+	if values == None:
 		error =  "No User! It seems that you were trying to acces a page that doesn't exist!"
 		return flask.render_template("404.html", error=error)
 	else:
@@ -74,14 +92,13 @@ def addEvent(username):
 			addevent = g.db.execute('INSERT INTO events (name, location, description, start, end, calid) values (%s, %s, %s, %s, %s, %s)', title, location, desc, startdaytime, enddaytime, calid)
 			if addevent:
 				message = "Event added succesfully"
-		return flask.render_template("addevent.html", message=message)	
-
-	# if g.db.iter('SELECT username FROM users where username = %s', username) == None:
-	# 	error = "User was not found in our databse. Please Select a User"
-	# 	#flask.render_template('404.html', error = error)
+		return flask.render_template("addevent.html", message=message)
 	
-		
 
+# def addUser()
+# Loads "adduser.html"
+# No passed Variables
+# Function: Adds a new user to the database
 @app.route('/adduser', methods=['POST', 'GET'])
 def addUser():
 	error = None
@@ -103,9 +120,14 @@ def addUser():
 	return flask.render_template('adduser.html', error=error, output=output)
 
 
+# def deleteuser()
+# Redirect
+# Int userid is passed to url
+# Function: Takes userid and deletes user from table.
 @app.route('/deleteuser/<int:userid>', methods=["GET"])
 def deleteuser(userid):
 	g.db.execute('DELETE FROM users WHERE id = %s', userid)
+	g.db.execute('DELETE FROM events WHERE calid = %s', userid)
 	print "User with id: " + str(userid) + 'was deleted!'
 	return flask.redirect(flask.url_for('hello'))
 

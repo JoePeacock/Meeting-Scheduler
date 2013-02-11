@@ -21,9 +21,14 @@ Page: index.html
 		<input type="submit" value ="search">
 	</form>
 
-	{% for user in user_list %}
-	<h3> {{ user.name }} <br> {{ user.title }}</h3>
-	<a href="{{ url_for('deleteuser', userid = user.id) }}">Delete</a>
+	<P>Calendar for {{ name }}</p>
+
+	{% for event in events %}
+	<h3> {{ event.name }} <br> {{ event.location }}</h3>
+	<p> {{ event.desciption }} <br>
+		From {{ event.start }} to {{ event.end }} </p>
+	
 	{% endfor %}
 
 </body>	
+
