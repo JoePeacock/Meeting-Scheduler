@@ -1,0 +1,11 @@
+# Required Mobules/Packages to Install
+# Pip is the Python Package installer 
+
+sudo apt-get install python-MySQLdb
+sudo pip install flask
+sudo pip install tornado
+sudo pip install requests
+
+# Reconfigure the config.py file for the proper database connection
+# Run the calendar.sql commands to create tables in the database
+#Done! 
