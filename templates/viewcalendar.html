@@ -1,34 +1,45 @@
-<!-- This Meeting Scheduler is written by Joseph Peacock CEN/EE 2016' 
-For the University at Buffalo (SUNY) - Computer Science and Engineering Department 
+{% extends "base.html" %}
+{% block content %}
 
-Date: Janurary 2013 
-Author: Joseph Peacock 
-Contact: japeacoc@buffalo.edu
-Page: index.html
+	<div class="nav-status">
+		<div class="container">
 
--->
+			<p>Week of 24 of Februray, 2013 <a href="#" class="prev-week">Prev</a> <a href="#" class="next-week">Next</a></p>
+			<ul class="cal-view">
+				<li>Week</li>
+				<li>Day</li>
+			</ul>
+		</div>
+	</div>
 
-<!doctype html>
-<html>
-<head>
-	<title>Meeting Scheduler</title>
-</head>
+		<div class="calendar-nav">
 
-<body>
+				<ul class="cal-nav">
+						
+				</ul>
+		</div>
 
-	<form method="post" action="/">
-		<input type="text" name='searchquery'>
-		<input type="submit" value ="search">
-	</form>
+	<!-- <div class="body-content">
+		<div class="container">
+				<form method="post" action="/">
+				<input type="text" name='searchquery'>
+				<input type="submit" value ="search">
+			</form>
 
-	<P>Calendar for {{ name }}</p>
+			<P>Calendar for {{ name }}</p>
 
-	{% for event in events %}
-	<h3> {{ event.name }} <br> {{ event.location }}</h3>
-	<p> {{ event.description }} <br>
-		From {{ event.start }} to {{ event.end }} </p>
+			{% for event in events %}
+
+			<h3> {{ event.name }} <br> {{ event.location }}</h3>
+			<p> {{ event.description }} <br>
+				From {{ event.start }} to {{ event.end }} </p>
+			
+			{% endfor %}
+			
+		</div>
+	</div> -->
 	
-	{% endfor %}
 
 </body>	
 
+{% endblock %}

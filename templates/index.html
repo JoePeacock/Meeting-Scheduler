@@ -21,8 +21,10 @@ Page: index.html
 		<input type="submit" value ="search">
 	</form>
 
-	{% for user in user_list %}
-	<h3> {{ user.name }} <br> {{ user.title }}</h3>
+	<p>  {% if message %} {{ message }} {% endif %}</p>
+
+	{% for user in userList %}
+	<h3> <a href="/calendar/{{ user.username }}">{{ user.name }}</a><br> {{ user.title }}</h3>
 	<a href="{{ url_for('deleteuser', userid = user.id) }}">Delete</a>
 	{% endfor %}
 

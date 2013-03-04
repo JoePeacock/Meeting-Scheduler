@@ -44,10 +44,27 @@ def hello():
 		search = flask.request.form['searchquery']
 		s = search.lower().replace(' ', '')
 		s = "%"+s+"%"
-		user_list = g.db.query('SELECT * FROM users WHERE username LIKE %s', s)
+		userList = g.db.query('SELECT * FROM users WHERE username LIKE %s', s)
+		if len(userList) == 0:
+			message = "There were no results for your search '" + search + "'" 
+		else:
+			message = "There were " + str(len(userList)) + " results for your search '" + search + "'"
 	else:
-		user_list = g.db.iter('select * from users')		
-	return flask.render_template('index.html', user_list = user_list)
+		userList = g.db.iter('select * from users')
+		message = False;
+	return flask.render_template('index.html', userList = userList, message=message)
+
+# def calendarFilter()
+# Renders "calendarview.html"
+# Function: Displays the general Calendar for all calid 
+@app.route('/calendar/')
+def calendarFilter():
+	events = [];
+	events = g.db.query('SELECT * FROM events INNER JOIN users ON events.calid = users.id')
+	genEvents = g.db.query('SELECT * FROM events WHERE calid = 0');
+	events.append(genEvents);
+	print events;
+	return flask.render_template('viewcalendar.html', events = events)
 
 
 # def viewCalendar()
@@ -66,13 +83,32 @@ def viewCalendar(username):
 		events = g.db.query('SELECT * FROM events WHERE calid = %s', str(values['id']))
 	return flask.render_template('viewcalendar.html', events = events, name = values['name'])
 
-
 # def addEvent()
+# Loads "addevent.html"
+# Function: Add's an event to the calendar as a general event under cal id 0. 
+@app.route('/addevent/', methods=["GET", "POST"])
+def addEvent():
+	if flask.request.method == 'POST':
+		title = flask.request.form['eventTitle']
+		desc = flask.request.form['eventDesc']
+		location = flask.request.form['eventLocation']
+		date = flask.request.form['eventDate'].replace("/", '')
+		start = flask.request.form['startTime'].replace(":", '').replace(" ", '')
+		end = flask.request.form['endTime'].replace(":", '').replace(" ", '')
+		startdaytime = datetime.datetime.strptime(date+start, "%m%d%Y%I%M%p")
+		enddaytime = datetime.datetime.strptime(date+end, "%m%d%Y%I%M%p")
+		calid = 0
+		addevent = g.db.execute('INSERT INTO events (name, location, description, start, end, calid) values (%s, %s, %s, %s, %s, %s)', title, location, desc, startdaytime, enddaytime, calid)
+		if addevent:
+			message = "Event added succesfully"
+	return flask.render_template("addevent.html")
+
+# def addEventUser()
 # Loads "addevent.html"
 # <username> is the string all lowercase no spaces. If not found returns 404.
 # Function: Add's an event to a users calendar specified in the URL
 @app.route('/addevent/<username>', methods=["GET", "POST"])
-def addEvent(username):
+def addEventUser(username):
 	message = None;
 	values = g.db.get('SELECT username, id from users where username = %s', username) 
 	if values == None:

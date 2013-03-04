@@ -1,0 +1,118 @@
+/* Resets */
+
+html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,address,cite,code,del,dfn,em,img,ins,q,small,strong,sub,sup,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{border:0;margin:0;padding:0}article,aside,figure,figure img,figcaption,hgroup,footer,header,nav,section,video,object{display:block}a img{border:0}figure{position:relative}figure img{width:100%}
+
+/* ------------------------------- */
+/*  Main body styles for desktop   */
+/* ------------------------------- */
+
+body {
+	font-family: 'Open Sans', sans-serif;
+
+}
+
+.container {
+	margin: 0 auto;
+	width: 1140px;
+}
+
+.header {
+	width: 100%;
+	background-color: #041A9B;
+	padding:15px 0 10px;
+}
+
+.body-content {
+	padding: 20px;
+}
+
+
+
+/* ------------------------------- */
+/*  Calendar Styling               */
+/* ------------------------------- */
+
+.calendar-nav {
+	height: 100%;
+	background-color:#dedede;
+	border-bottom: 1px solid #bbb;
+
+}
+
+.cal-nav {
+	display: table;
+	width: 100%;
+	color:#666;
+}
+
+.cal-nav:hover {
+	cursor: pointer;
+}
+
+.cal-nav-select {
+	background-color: #809DC4;
+	color:#fff;
+	cursor: pointer;
+}
+
+.cal-nav li{
+	display: inline;
+	list-style-type: none;
+	display:table-cell;
+	border-left: 1px solid  #bbb;
+	padding:10px 15px 10px 35px;
+	transition: background-color .5s;
+	-moz-transition: background-color .5s; /* Firefox 4 */
+	-webkit-transition: background-color .5s; /* Safari and Chrome */
+	-o-transition: background-color .5s; /* Opera */
+}
+
+.cal-nav .date-num {
+	font-size: 2em;
+	float: left;
+	clear: none;
+}
+
+.cal-nav .date-day {
+	font-size: .7em;
+	float: left;
+	padding-left: 10px;
+	text-transform: uppercase;
+	padding-top: 7px;
+}
+
+.cal-nav .last {
+	border-right: 1px solid #bbb;
+}
+
+.nav-status {
+	padding: 10px 0;
+	font-size: .8em;
+	background-color: #809DC4;
+	color:#eee;
+	height: 20px;
+}
+
+.nav-status p {
+	float: left;
+}
+
+.cal-view {
+	float: right;
+	list-style-type: none;
+}
+
+.cal-view li {
+	display: inline;
+	background-color: #dedede;
+	padding: 5px 15px;
+	border-right: 1px solid #bbb;
+	color:#666;
+	width: 40px;
+	margin-right:-3px;
+} 
+
+.week {
+	float: left;
+	display: inline;
+}
