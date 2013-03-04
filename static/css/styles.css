@@ -55,6 +55,10 @@ body {
 	cursor: pointer;
 }
 
+.week {
+	width: 100%;
+}
+
 .cal-nav li{
 	display: inline;
 	list-style-type: none;
