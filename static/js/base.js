@@ -9,8 +9,8 @@ Page: base.html
 */
 
 
-/* NOTE REBUILD WEEKS WITH SINGULAR WEEKS REUPDATING THE LIST. *
-/
+/* NOTE REBUILD WEEKS WITH SINGULAR WEEKS REUPDATING THE LIST. */
+
 var weekDay = new Array("Sun", "Mon", "Tue", "Wed", "Thurs", "Fri", "Sat");
 var monthName = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
 var date = new Date();
