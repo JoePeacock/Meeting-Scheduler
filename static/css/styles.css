@@ -8,6 +8,8 @@ html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,addre
 
 body {
 	font-family: 'Open Sans', sans-serif;
+	height: 100%;
+	overflow: hidden;
 
 }
 
@@ -26,28 +28,16 @@ body {
 	padding: 20px;
 }
 
+table {
+	border-spacing: 0;
+}
+
 
 
 /* ------------------------------- */
 /*  Calendar Styling               */
 /* ------------------------------- */
 
-.calendar-nav {
-	height: 100%;
-	background-color:#dedede;
-	border-bottom: 1px solid #bbb;
-
-}
-
-.cal-nav {
-	display: table;
-	width: 100%;
-	color:#666;
-}
-
-.cal-nav:hover {
-	cursor: pointer;
-}
 
 .cal-nav-select {
 	background-color: #809DC4;
@@ -57,18 +47,31 @@ body {
 
 .week {
 	width: 100%;
+	background-color: #dedede;
 }
 
-.cal-nav li{
+.cal-nav {
+	width: 100%;
+	color:#666;
+	height:50px;
+	background-color: #000;
+}
+
+.cal-nav li {
+	text-align: center;
 	display: inline;
 	list-style-type: none;
-	display:table-cell;
+	width: 200px;
 	border-left: 1px solid  #bbb;
-	padding:10px 15px 10px 35px;
+	margin: 20px 0;
 	transition: background-color .5s;
 	-moz-transition: background-color .5s; /* Firefox 4 */
 	-webkit-transition: background-color .5s; /* Safari and Chrome */
 	-o-transition: background-color .5s; /* Opera */
+}
+
+.cal-nav li:hover {
+	cursor: pointer;
 }
 
 .cal-nav .date-num {
@@ -89,6 +92,7 @@ body {
 	border-right: 1px solid #bbb;
 }
 
+
 .nav-status {
 	padding: 10px 0;
 	font-size: .8em;
@@ -101,22 +105,35 @@ body {
 	float: left;
 }
 
-.cal-view {
-	float: right;
-	list-style-type: none;
+.sidebar {
+	width: 145px;
+	float: left;
 }
 
-.cal-view li {
-	display: inline;
-	background-color: #dedede;
-	padding: 5px 15px;
-	border-right: 1px solid #bbb;
-	color:#666;
-	width: 40px;
-	margin-right:-3px;
-} 
+.cal-wrap {
+	margin-left: 145px;
+	width: 100%;
+}
 
-.week {
+.calendar {
+	width: 87%;
+}
+
+.calendar td {
+	border: 1px solid #eee;
+	text-align: center;
+	height: 25px;
+}
+
+.times {
 	float: left;
-	display: inline;
+
+}
+
+.times td div{
+	border: 1px solid #eee;
+	height: 52px;
+	font-size: .75em;
+	width: 60px;
+	text-align: right;
 }

@@ -10,11 +10,11 @@
 import requests
 import os
 import flask
-import datetime
+from datetime import datetime 
 import time
-
+import json
 from tornado.database import Connection
-from flask import Flask, g 
+from flask import Flask, g, request
 
 import config
 
@@ -57,13 +57,12 @@ def hello():
 # def calendarFilter()
 # Renders "calendarview.html"
 # Function: Displays the general Calendar for all calid 
-@app.route('/calendar/')
+@app.route('/calendar/', methods=['POST', 'GET'])
 def calendarFilter():
 	events = [];
 	events = g.db.query('SELECT * FROM events INNER JOIN users ON events.calid = users.id')
 	genEvents = g.db.query('SELECT * FROM events WHERE calid = 0');
 	events.append(genEvents);
-	print events;
 	return flask.render_template('viewcalendar.html', events = events)
 
 
@@ -167,10 +166,27 @@ def deleteuser(userid):
 	print "User with id: " + str(userid) + 'was deleted!'
 	return flask.redirect(flask.url_for('hello'))
 
+@app.route('/reqs/getcal/', methods=["POST"])
+def getCal():
+	jsonDate = request.form
+	print jsonDate
+	print jsonDate['events']
+	test = json.dumps(jsonDate['events'])
+	print test
+	print test['day']
+	# for item in jsonDate['events']:
+	# 	print item
+	# for item in jsonDate:
+	# 	print item
+	# for item in weekDates:
+	# 	print item
+	# queryDate = datetime(*(time.strptime(jsonDate['month']+jsonDate['day']+jsonDate['year'], "%m%d%Y")[0:6]))
+	return "queryDate"
+
 
 if __name__ == '__main__':
 	port = int(os.environ.get('PORT', 5003))
-	app.run(host='0.0.0.0', port=port)
+	app.run(host='0.0.0.0', port=port, debug=True)
 
 
 
