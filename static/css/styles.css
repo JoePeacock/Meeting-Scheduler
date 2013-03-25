@@ -145,15 +145,41 @@ table {
 	text-align: right;
 }
 
-.calendar-body td{
+.calendar-body {
 	height: 100%;
+}
+
+.calendar-body td{
+	height: 1000px;
 	position: relative;
 	border: 1px solid #eee;
 }
 
 .calendar-body div {
 	position: absolute;
-	width: 98%;
+	width: 96%;
 	background-color: #809DC4;
 	border: 1px solid #041A9B;
+	border-radius: 2px;
+	font-size: .75em;
+	text-align: left;
+}
+
+.calendar-body div p {
+	padding: 5px 10px;
+}
+
+.calendar th {
+	height: 44px;
+}
+
+.static {
+	position: static;
+}
+
+#current-time {
+	height: 1px;
+	border: none;
+	width: 100%;
+	background-color: red;
 }

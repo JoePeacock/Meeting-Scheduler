@@ -168,6 +168,15 @@ def deleteuser(userid):
 	print "User with id: " + str(userid) + 'was deleted!'
 	return flask.redirect(flask.url_for('hello'))
 
+# def deleteEvent()
+# Int eventid is passed to url
+# Function: Takes eventid and deletes user from table.
+@app.route('/deletevent/<int:eventid>', methods=["GET"])
+def deleteEvent(eventid):
+	g.db.execute('DELETE FROM events WHERE id = %s', eventid)
+	print "User with id: " + str(eventid) + 'was deleted!'
+	return flask.redirect(flask.url_for('calendarFilter'))
+
 
 @app.route('/reqs/getcal/', methods=["POST", "GET"])
 def getCal():
@@ -180,14 +189,15 @@ def getCal():
 	end = datetime.datetime.strptime(endOfWeek, "%m%d%Y")
 	print jsonDate['user']
 	if jsonDate['user'] == 'none' or jsonDate['user'] == '':
-		events = g.db.query('SELECT * FROM events WHERE calid = %s AND start between %s and %s ORDER BY start DESC', 0, start, end)
+		events = g.db.query('SELECT * FROM events WHERE calid = %s OR start = %s OR end = %s OR start between %s AND %s ORDER BY start DESC', 0, start, end, start, end)
 		print "GOOD if none"		
 	else: 
 		username = jsonDate['user']
-		events = g.db.query('SELECT * FROM events INNER JOIN users ON events.calid = users.id WHERE username = %s AND start between %s and %s ORDER BY start DESC', username, start, end)
+		events = g.db.query('SELECT * FROM events INNER JOIN users ON events.calid = users.id WHERE username = %s AND start = %s OR end = %s OR start between %s and  %s ORDER BY start DESC', username, start, end, start, end)
 		print "BAD if none"
 	for event in events:
 		eventsArray.append(event)
+		print event['id']
 	dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 	return json.dumps(eventsArray, default=dthandler)
 
