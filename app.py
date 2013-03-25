@@ -10,9 +10,10 @@
 import requests
 import os
 import flask
-from datetime import datetime 
+import datetime 
 import time
 import json
+import time
 from tornado.database import Connection
 from flask import Flask, g, request
 
@@ -87,6 +88,7 @@ def viewCalendar(username):
 # Function: Add's an event to the calendar as a general event under cal id 0. 
 @app.route('/addevent/', methods=["GET", "POST"])
 def addEvent():
+	message = None;
 	if flask.request.method == 'POST':
 		title = flask.request.form['eventTitle']
 		desc = flask.request.form['eventDesc']
@@ -100,7 +102,7 @@ def addEvent():
 		addevent = g.db.execute('INSERT INTO events (name, location, description, start, end, calid) values (%s, %s, %s, %s, %s, %s)', title, location, desc, startdaytime, enddaytime, calid)
 		if addevent:
 			message = "Event added succesfully"
-	return flask.render_template("addevent.html")
+	return flask.render_template("addevent.html", message=message)
 
 # def addEventUser()
 # Loads "addevent.html"
@@ -166,22 +168,28 @@ def deleteuser(userid):
 	print "User with id: " + str(userid) + 'was deleted!'
 	return flask.redirect(flask.url_for('hello'))
 
-@app.route('/reqs/getcal/', methods=["POST"])
+
+@app.route('/reqs/getcal/', methods=["POST", "GET"])
 def getCal():
+	eventsArray = []
 	jsonDate = request.form
-	print jsonDate
-	print jsonDate['events']
-	test = json.dumps(jsonDate['events'])
-	print test
-	print test['day']
-	# for item in jsonDate['events']:
-	# 	print item
-	# for item in jsonDate:
-	# 	print item
-	# for item in weekDates:
-	# 	print item
-	# queryDate = datetime(*(time.strptime(jsonDate['month']+jsonDate['day']+jsonDate['year'], "%m%d%Y")[0:6]))
-	return "queryDate"
+	datesArray = json.loads(jsonDate['events'])
+	beginWeek = str(datesArray[0]['month'])+str(datesArray[0]['day'])+str(datesArray[0]['year'])
+	start = datetime.datetime.strptime(beginWeek, "%m%d%Y")
+	endOfWeek = str(datesArray[len(datesArray)-1]['month'])+str(datesArray[len(datesArray)-1]['day'])+str(datesArray[len(datesArray)-1]['year'])
+	end = datetime.datetime.strptime(endOfWeek, "%m%d%Y")
+	print jsonDate['user']
+	if jsonDate['user'] == 'none' or jsonDate['user'] == '':
+		events = g.db.query('SELECT * FROM events WHERE calid = %s AND start between %s and %s ORDER BY start DESC', 0, start, end)
+		print "GOOD if none"		
+	else: 
+		username = jsonDate['user']
+		events = g.db.query('SELECT * FROM events INNER JOIN users ON events.calid = users.id WHERE username = %s AND start between %s and %s ORDER BY start DESC', username, start, end)
+		print "BAD if none"
+	for event in events:
+		eventsArray.append(event)
+	dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
+	return json.dumps(eventsArray, default=dthandler)
 
 
 if __name__ == '__main__':

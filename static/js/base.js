@@ -8,13 +8,38 @@ Page: base.html
 
 */
 
-/* NOTE REBUILD WEEKS WITH SINGULAR WEEKS REUPDATING THE LIST. */
-
-var times =  new Array("8:00 am", "9:00 am", "10:00 am",  "11:00 am",  "12:00 pm", "1:00 pm",  "2:00 pm", "3:00 pm",  "4:00 pm",  "5:00 pm",  "6:00 pm");
+var times =  new Array("7:00 am", "7:30 am", "8:00 am", "9:00 am", "10:00 am",  "11:00 am",  "12:00 pm", "1:00 pm",  "2:00 pm", "3:00 pm",  "4:00 pm",  "5:00 pm",  "6:00 pm");
 var weekDay = new Array("Sun", "Mon", "Tue", "Wed", "Thurs", "Fri", "Sat");
 var monthName = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
 var date = new Date();
 var pastDate = new Date();
+
+function postDates(weekofEvents) {
+	var weekdates = '';
+	for (i = 0; i < weekofEvents.length; i++) {
+		weekdates+= weekofEvents[i] + ',';
+	}
+	weekdates = weekdates.substring(0, weekdates.length - 1);
+	weekdates = '[' + weekdates + ']';
+
+	var url = window.location.href;
+	var splitarray = url.split("/");
+	if (splitarray[splitarray.length-1] == '#') {
+		var username = 'none';
+	} else {
+		var username = splitarray[splitarray.length-1];
+		if (username.charAt(username.length-1) == '#') {
+			username = username.slice(0, -1);
+		}
+	}
+
+	return $.ajax({
+		type: "POST",
+		dataType: "json",
+		data:  { events: weekdates, user: username },
+		url: 'http://0.0.0.0:5003/reqs/getcal/',
+	});	
+}
 
 $(document).ready(function(){
 	var diff = date.getDay();
@@ -23,15 +48,36 @@ $(document).ready(function(){
 	var pos = 0;
 	var neg = 0;
 	var index = 0;
-	ul.append("<div class='week' style='display:block'></div>");
+	var weekofEvents = new Array();
 
+	weekofEvents = [];
 	for(i = 0; i < 7; i++) {
-		var dates = new Date(date.getFullYear(), date.getMonth(), date.getDate()-diff);
-		$(".cal-dates").append('<th><span class ="date-num">' + (dates.getDate()) + '</span><span class="date-day">' + weekDay[dates.getDay()] + '<bR>' + monthName[dates.getMonth()] + '</span></th>');
+		var dates = new Date(date.getFullYear(), date.getMonth(), date.getDate()-diff);		
+		var datesjson = JSON.stringify({ day: dates.getDate()  , month: (dates.getMonth()+1), year: dates.getFullYear() });
+		weekofEvents.push(datesjson);
+		$(".cal-dates").append('<th><span class ="date-num">' + (dates.getDate()) + ' </span><span class="date-day">' + weekDay[dates.getDay()] + '<bR>' + monthName[dates.getMonth()] + '</span></th>');
 		diff--;		
 	}
+
+	postDates(weekofEvents).complete(function(xhr, textStatus) {  
+		var results = xhr.responseText;
+		var json = JSON.parse(results);
+		console.log(results);
+		for (i=0; i < json.length; i++) {
+			var sdateTime = json[i]['start'].split('T');
+			var edateTime = json[i]['end'].split('T');
+			var sdate = sdateTime[0].split('-');
+			var stime = sdateTime[1].split(':');
+			var eventLength = ((edateTime[1].split(':')[0] - stime[0])*50) + ((((edateTime[1].split(':')[1]/parseFloat(60)) - ((stime[1]/parseFloat(60))))*50));
+			console.log(eventLength);
+			var yPos = ((stime[1]/parseFloat(60))*50) + ((stime[0]-6)*50)
+			var xPos = 7 - (Math.abs(sdate[2] - dates.getDate()));
+			$('.calendar-body td:nth-child(' + (xPos) + ')').append('<div class="cal-event" style="top:' + yPos + 'px; height:'+ eventLength + 'px">'+json[i]['name']+'<br>' + sdateTime[1] + '<br>' + edateTime[1] + '</div>');
+		}
+	});
+
 	
-	$('.cal-nav li').each(function(){
+	$('.cal-dates th').each(function(){
 		$(this).removeClass('cal-nav-select');
 		if ($(this).find('.date-num').text() == date.getDate()) {
 			$(this).addClass('cal-nav-select');
@@ -43,78 +89,103 @@ $(document).ready(function(){
 	}
 	
 
-	$(".cal-nav li").click(function(){
-		$(".cal-nav li").removeClass("cal-nav-select");
+	$(".cal-dates th").click(function(){
+		$(".cal-dates th").removeClass("cal-nav-select");
 		$(this).toggleClass("cal-nav-select")
 	});
 
 	$(".prev-week").click(function(){
-
+		$('.calendar-body .cal-event').remove();
 		var endweek = $('.week li:nth-child(7)').text();
 
-			if ((date.getDate()+Math.abs(diff)) != endweek) {
-				dates.setDate(dates.getDate()-14);
+		if ((date.getDate()+Math.abs(diff)) != endweek) {
+			dates.setDate(dates.getDate()-14);
+		} else {
+			dates.setDate(date.getDate()+Math.abs(diff)-14);
+		}
+
+		weekofEvents = [];
+		for(i = 1; i < 8; i++) {
+			dates.setDate(dates.getDate()+1);
+
+			datesjson = JSON.stringify({ day: dates.getDate()  , month: (dates.getMonth()+1), year: dates.getFullYear() });
+			weekofEvents.push(datesjson);
+
+			if (dates.getDate() == date.getDate() && dates.getMonth() == date.getMonth() && dates.getFullYear() == date.getFullYear()) {
+				$('.cal-dates th:nth-child(' + i + ')').replaceWith('<th class="cal-nav-select"><span class ="date-num">' + (dates.getDate()) + '</span><span class="date-day">' + weekDay[dates.getDay()] + '<bR>' + monthName[dates.getMonth()] + '</span></th>');
+
 			} else {
-				dates.setDate(date.getDate()+Math.abs(diff)-14);
-			}
-
-			var weekofEvents = new Array();
-
-			for(i = 1; i < 8; i++) {
-				dates.setDate(dates.getDate()+1);
-				var weekofEvents = '{ "day":"' + dates.getDate() + "', 'month': '" + (dates.getMonth()+1) + "', 'year': '" +dates.getFullYear() + '"}';
-
-				if (dates.getDate() == date.getDate()) {
-					$('.cal-dates th:nth-child(' + i + ')').replaceWith('<th class="cal-nav-select"><span class ="date-num">' + (dates.getDate()) + '</span><span class="date-day">' + weekDay[dates.getDay()] + '<bR>' + monthName[dates.getMonth()] + '</span></th>');
-
-				} else {
-					$('.cal-dates th:nth-child(' + i + ')').replaceWith('<th><span class ="date-num">' + (dates.getDate()) + '</span><span class="date-day">' + weekDay[dates.getDay()] + '<bR>' + monthName[dates.getMonth()] + '</span></th>');
-				}
-
-
-			}
-
-			$.ajax({
-					type: "POST",
-					dataType: "json",
-					data:  {'events': weekofEvents },
-					url: 'http://localhost:5003/reqs/getcal/',
-					complete: function(xhr, textStatus) {  
-						console.log(xhr.responseText) 
-					}
-				});
-
-			$(".cal-nav td").click(function(){
-				$(".cal-nav li").removeClass("cal-nav-select");
-				$(this).toggleClass("cal-nav-select");
-			});
-			
-		});
-
-	$(".next-week").click(function(){
-		
-		var endweek = $('.cal-dates td:nth-child(7)').text();
-
-			if ((date.getDate()+Math.abs(diff)) != endweek) {
-				dates.setDate(dates.getDate());
-			} else {
-				dates.setDate(date.getDate()+Math.abs(diff));
-			}
-
-			for (i = 1; i < 8; i++) {
-				dates.setDate(dates.getDate()+1);
-				if (dates.getDate() == date.getDate()) {
-					$('.cal-dates th:nth-child(' + i + ')').replaceWith('<th class="cal-nav-select"><span class ="date-num">' + (dates.getDate()) + '</span><span class="date-day">' + weekDay[dates.getDay()] + '<bR>' + monthName[dates.getMonth()] + '</span></th>');
-
-				} else {
 				$('.cal-dates th:nth-child(' + i + ')').replaceWith('<th><span class ="date-num">' + (dates.getDate()) + '</span><span class="date-day">' + weekDay[dates.getDay()] + '<bR>' + monthName[dates.getMonth()] + '</span></th>');
 			}
 		}
 
-			$(".cal-nav li").click(function(){
-				$(".cal-nav li").removeClass("cal-nav-select");
-				$(this).toggleClass("cal-nav-select");
-			});
+		postDates(weekofEvents).complete(function(xhr, textStatus) {  
+		var results = xhr.responseText;
+		var json = JSON.parse(results);
+		console.log(results);
+		for (i=0; i < json.length; i++) {
+			var sdateTime = json[i]['start'].split('T');
+			var edateTime = json[i]['end'].split('T');
+			var sdate = sdateTime[0].split('-');
+			var stime = sdateTime[1].split(':');
+			var eventLength = ((edateTime[1].split(':')[0] - stime[0])*50) + ((((edateTime[1].split(':')[1]/parseFloat(60)) - ((stime[1]/parseFloat(60))))*50));
+			console.log(eventLength);
+			var yPos = ((stime[1]/parseFloat(60))*50) + ((stime[0]-6)*50)
+			var xPos = 7 - (Math.abs(sdate[2] - dates.getDate()));
+			$('.calendar-body td:nth-child(' + (xPos) + ')').append('<div class="cal-event" style="top:' + yPos + 'px; height:'+ eventLength + 'px">'+json[i]['name']+'<br>' + sdateTime[1] + '<br>' + edateTime[1] + '</div>');
+		}
+	});
+
+		$(".cal-dates th").click(function(){
+			$(".cal-dates th").removeClass("cal-nav-select");
+			$(this).toggleClass("cal-nav-select");
+		});
+			
+		});
+
+	$(".next-week").click(function(){
+		$('.calendar-body .cal-event').remove();		
+		var endweek = $('.cal-dates td:nth-child(7)').text();
+
+		if ((date.getDate()+Math.abs(diff)) != endweek) {
+			dates.setDate(dates.getDate());
+		} else {
+			dates.setDate(date.getDate()+Math.abs(diff));
+		}
+
+		weekofEvents = [];
+		for (i = 1; i < 8; i++) {
+			dates.setDate(dates.getDate()+1);
+			datesjson = JSON.stringify({ day: dates.getDate()  , month: (dates.getMonth()+1), year: dates.getFullYear() });
+			weekofEvents.push(datesjson);
+			if (dates.getDate() == date.getDate() && dates.getMonth() == date.getMonth() && dates.getFullYear() == date.getFullYear()) {
+				$('.cal-dates th:nth-child(' + i + ')').replaceWith('<th class="cal-nav-select"><span class ="date-num">' + (dates.getDate()) + '</span><span class="date-day">' + weekDay[dates.getDay()] + '<bR>' + monthName[dates.getMonth()] + '</span></th>');
+
+			} else {
+			$('.cal-dates th:nth-child(' + i + ')').replaceWith('<th><span class ="date-num">' + (dates.getDate()) + '</span><span class="date-day">' + weekDay[dates.getDay()] + '<bR>' + monthName[dates.getMonth()] + '</span></th>');
+			}
+		}
+		
+		postDates(weekofEvents).complete(function(xhr, textStatus) {  
+		var results = xhr.responseText;
+		var json = JSON.parse(results);
+		console.log(results);
+		for (i=0; i < json.length; i++) {
+			var sdateTime = json[i]['start'].split('T');
+			var edateTime = json[i]['end'].split('T');
+			var sdate = sdateTime[0].split('-');
+			var stime = sdateTime[1].split(':');
+			var eventLength = ((edateTime[1].split(':')[0] - stime[0])*50) + ((((edateTime[1].split(':')[1]/parseFloat(60)) - ((stime[1]/parseFloat(60))))*50));
+			console.log(eventLength);
+			var yPos = ((stime[1]/parseFloat(60))*50) + ((stime[0]-6)*50)
+			var xPos = 7 - (Math.abs(sdate[2] - dates.getDate()));
+			$('.calendar-body td:nth-child(' + (xPos) + ')').append('<div class="cal-event" style="top:' + yPos + 'px; height:'+ eventLength + 'px">'+json[i]['name']+'<br>' + sdateTime[1] + '<br>' + edateTime[1] + '</div>');
+		}
+	});
+		$(".cal-dates th").click(function(){
+			$(".cal-dates th").removeClass("cal-nav-select");
+			$(this).toggleClass("cal-nav-select");
+		});
 
 	});
 });

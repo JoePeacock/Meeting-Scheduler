@@ -9,8 +9,7 @@ html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,addre
 body {
 	font-family: 'Open Sans', sans-serif;
 	height: 100%;
-	overflow: hidden;
-
+	overflow-x:hidden; 
 }
 
 .container {
@@ -22,6 +21,7 @@ body {
 	width: 100%;
 	background-color: #041A9B;
 	padding:15px 0 10px;
+
 }
 
 .body-content {
@@ -30,6 +30,11 @@ body {
 
 table {
 	border-spacing: 0;
+}
+
+.container {
+	width: 1140px;
+	margin:0 auto;
 }
 
 
@@ -117,12 +122,14 @@ table {
 
 .calendar {
 	width: 87%;
+	overflow-y: hidden;
 }
 
 .calendar td {
 	border: 1px solid #eee;
 	text-align: center;
 	height: 25px;
+	width: 14.4%;
 }
 
 .times {
@@ -132,8 +139,21 @@ table {
 
 .times td div{
 	border: 1px solid #eee;
-	height: 52px;
+	height: 48px;
 	font-size: .75em;
 	width: 60px;
 	text-align: right;
+}
+
+.calendar-body td{
+	height: 100%;
+	position: relative;
+	border: 1px solid #eee;
+}
+
+.calendar-body div {
+	position: absolute;
+	width: 98%;
+	background-color: #809DC4;
+	border: 1px solid #041A9B;
 }

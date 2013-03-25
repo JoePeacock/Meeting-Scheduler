@@ -36,7 +36,7 @@ $(document).ready(function(){
 
 
 	
-	$('#eventDate').datepicker();
+	$('.container #eventDate').datepicker();
 	
 
 	$('.timeinput').focus(function(){
