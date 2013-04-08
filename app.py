@@ -83,6 +83,13 @@ def viewCalendar(username):
 		events = g.db.query('SELECT * FROM events WHERE calid = %s', str(values['id']))
 	return flask.render_template('viewcalendar.html', events = events, name = values['name'])
 
+
+# ----------------------------------------------
+# ----------------------------------------------
+# ADDD CHECK FOR STARTIME BEING LATER THAN ENDTIME
+# ----------------------------------------------
+# ----------------------------------------------
+
 # def addEvent()
 # Loads "addevent.html"
 # Function: Add's an event to the calendar as a general event under cal id 0. 
@@ -189,15 +196,13 @@ def getCal():
 	end = datetime.datetime.strptime(endOfWeek, "%m%d%Y")
 	print jsonDate['user']
 	if jsonDate['user'] == 'none' or jsonDate['user'] == '':
-		events = g.db.query('SELECT * FROM events WHERE calid = %s OR start = %s OR end = %s OR start between %s AND %s ORDER BY start DESC', 0, start, end, start, end)
-		print "GOOD if none"		
+		events = g.db.query('SELECT * FROM events WHERE calid = %s OR start = %s OR end = %s OR start between %s AND %s ORDER BY start DESC', 0, start, end, start, end)	
 	else: 
 		username = jsonDate['user']
 		events = g.db.query('SELECT * FROM events INNER JOIN users ON events.calid = users.id WHERE username = %s AND start = %s OR end = %s OR start between %s and  %s ORDER BY start DESC', username, start, end, start, end)
-		print "BAD if none"
 	for event in events:
 		eventsArray.append(event)
-		print event['id']
+	print eventsArray[3]['start']	
 	dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 	return json.dumps(eventsArray, default=dthandler)
 
