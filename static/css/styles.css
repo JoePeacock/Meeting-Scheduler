@@ -21,6 +21,8 @@ body {
 	width: 100%;
 	background-color: #041A9B;
 	padding:15px 0 10px;
+	z-index: 1;
+	position: fixed;
 
 }
 
@@ -104,6 +106,10 @@ table {
 	background-color: #809DC4;
 	color:#eee;
 	height: 20px;
+	position: fixed;
+	margin-top: 50px;
+	z-index: 1;
+	width: 100%;
 }
 
 .nav-status p {
@@ -113,18 +119,25 @@ table {
 .sidebar {
 	width: 145px;
 	float: left;
+	position: fixed;
+	margin-top: 100px;
 }
 
 .cal-wrap {
 	margin-left: 145px;
 	width: 100%;
+	z-index: 0;
 }
 
 .calendar {
 	width: 87%;
 	overflow-y: hidden;
+	padding-top: 87px;
 }
 
+.calendar tbody{
+	margin-top: 50px;
+}
 .calendar td {
 	border: 1px solid #eee;
 	text-align: center;
@@ -132,9 +145,18 @@ table {
 	width: 14.4%;
 }
 
+.cal-dates {
+	width: 100%;
+	position: fixed;
+}
+
+.cal-dates th{
+	width: 200px;
+}
+
 .times {
 	float: left;
-
+	padding-top: 90px;
 }
 
 .times td div{

@@ -4,7 +4,7 @@ For the University at Buffalo (SUNY) - Computer Science and Engineering Departme
 Date: Janurary 2013 
 Author: Joseph Peacock 
 Contact: japeacoc@buffalo.edu
-Page: base.html
+Page: base.js
 
 */
 
@@ -26,7 +26,7 @@ function postDates(weekofEvents) {
 	var splitarray = url.split("/");
 	if (splitarray[splitarray.length-1] == '#') {
 		var username = 'none';
-	} else {
+	} else {2
 		var username = splitarray[splitarray.length-1];
 		if (username.charAt(username.length-1) == '#') {
 			username = username.slice(0, -1);
@@ -57,10 +57,10 @@ $(document).ready(function(){
 		var dates = new Date(date.getFullYear(), date.getMonth(), date.getDate()-diff);		
 		var datesjson = JSON.stringify({ day: dates.getDate()  , month: (dates.getMonth()+1), year: dates.getFullYear() });
 		weekofEvents.push(datesjson);
-		$(".cal-dates").append('<th>' + weekDay[dates.getDay()] + ' <span id="date">' +  (dates.getDate())+ '</span> ' + monthName[dates.getMonth()] + '</th>');
+		$(".cal-dates").append('<th>' + weekDay[dates.getDay()] + ' ' +  (dates.getDate()) + ' ' + monthName[dates.getMonth()] + '</th>');
 		diff--;		
 	}
-
+	console.log(weekofEvents);
 	var currentTD = Math.abs(date.getDate() - dates.getDate());
 	var currentTimePx = (((date.getHours()-6)*50) + (date.getMinutes()/parseFloat(60)*50));
 	var today = $('.calendar-body td:nth-child(' + (7-currentTD) + ')');	 
@@ -69,58 +69,22 @@ $(document).ready(function(){
 
 
 	postDates(weekofEvents).complete(function(xhr, textStatus) {  
-		var results = xhr.responseText;
-		var json = JSON.parse(results);
-		console.log(results);
-		for (i=0; i < json.length; i++) {
-			var sdateTime = json[i]['start'].split('T');
-			var edateTime = json[i]['end'].split('T');
-			var sdate = sdateTime[0].split('-');
-			var stime = sdateTime[1].split(':');
-			var etime = edateTime[1].split(':');
-			var eventLength = ((edateTime[1].split(':')[0] - stime[0])*50) + ((((edateTime[1].split(':')[1]/parseFloat(60)) - ((stime[1]/parseFloat(60))))*50));
-			console.log(eventLength);
-			var yPos = ((stime[1]/parseFloat(60))*50) + ((stime[0]-6)*50)
-			var xPos = 7 - (Math.abs(sdate[2] - dates.getDate()));
-			console.log(stime);
-			if (stime[0] > 12) {
-				if(stime[1] == '00') {
-					stime[0] = stime[0] - 12;
-					stime[0] = stime[0] + 'p';
-				} else {
-					stime[0] = stime[0] - 12;
-					stime[0] = stime[0] + ':' + stime[1];
-					stime[0] = stime[0] + 'p';
-				}
-			} if (etime[0] > 12) {
-				if(etime[1] == '00') {
-					etime[0] = (etime[0] - 12) + 'p';
-				} else {
-					etime[0] = (etime[0] - 12) + ':' + etime[1] + 'p'
-				}
+		var eventsObj = new eventFormat(xhr.responseText);
 
-				
+		for (i=0; i < eventsObj.size(); i++) {
+			eventsObj.sDateTime(i);
+			eventsObj.eDateTime(i);
+			var stime = eventsObj.startTime(i);
+			var etime = eventsObj.endTime(i);
+			var sdate = eventsObj.date;
+			var eventLength = eventsObj.eventLength(i);
+			var yPos = eventsObj.getYPos();
+			var xPos = eventsObj.getXPos(dates.getDate()-i);
+			
+			if (currentTimePx > yPos && date.getDate() == sdate) {
+				$('.calendar-body td:nth-child(' + (xPos) + ')').append('<div class="cal-event" style="top:' + yPos + 'px; height:'+ eventLength + 'px; background-color:#ccc; border-color:#aaa"><p>' + stime + ' - ' + etime + '<br><strong>' + json[i]['name']+'</strong><!--<a href="/deletevent/' + json[i]['id'] + '">Delete</a> --></p></div>');
 			} else {
-				if (stime[1] == '00') {
-					stime[0] = stime[0] + 'a';
-				} else {
-					stime[0] = stime[0] + ':' + stime[1] + 'a';
-				}
-				if (etime[1] == '00') {
-					etime[0] = etime[0] + 'a';
-				} else {
-					etime[0] = etime[0] + ':' + stime[1] + 'a';
-				}
-			}
-			if (etime[0] == '12') {
-					etime[0] += 'p';
-				} if (stime[0] == '12') {
-					stime[0] += 'p';
-				}
-			if (currentTimePx > yPos && date.getDate() == sdate[2]) {
-				$('.calendar-body td:nth-child(' + (xPos) + ')').append('<div class="cal-event" style="top:' + yPos + 'px; height:'+ eventLength + 'px; background-color:#ccc; border-color:#aaa"><p>' + stime[0] + ' - ' + etime[0] + '<br><strong>' + json[i]['name']+'</strong><!--<a href="/deletevent/' + json[i]['id'] + '">Delete</a> --></p></div>');
-			} else {
-			$('.calendar-body td:nth-child(' + (xPos) + ')').append('<div class="cal-event" style="top:' + yPos + 'px; height:'+ eventLength + 'px"><p>' + stime[0] + ' - ' + etime[0] + '<br><strong>' + json[i]['name']+'</strong><!--<a href="/deletevent/' + json[i]['id'] + '">Delete</a> --></p></div>');
+			$('.calendar-body td:nth-child(' + (xPos) + ')').append('<div class="cal-event" style="top:' + yPos + 'px; height:'+ eventLength + 'px"><p>' + stime + ' - ' + etime + '<br><strong>' + eventsObj.Name(i) +'</strong><!--<a href="/deletevent/' + eventsObj.id(i) + '">Delete</a> --></p></div>');
 			}
 		}
 	});
@@ -163,31 +127,33 @@ $(document).ready(function(){
 			weekofEvents.push(datesjson);
 
 			if (dates.getDate() == date.getDate() && dates.getMonth() == date.getMonth() && dates.getFullYear() == date.getFullYear()) {
-				$('.cal-dates th:nth-child(' + i + ')').replaceWith('<th class="cal-nav-select"><span class ="date-num">' + (dates.getDate()) + '</span><span class="date-day">' + weekDay[dates.getDay()] + '<bR>' + monthName[dates.getMonth()] + '</span></th>');
+				$('.cal-dates th:nth-child(' + i + ')').replaceWith('<th class="cal-nav-select">' + (dates.getDate()) + ' ' + weekDay[dates.getDay()] + ' ' + monthName[dates.getMonth()] + '</th>');
 
 			} else {
-				$('.cal-dates th:nth-child(' + i + ')').replaceWith('<th><span class ="date-num">' + (dates.getDate()) + '</span><span class="date-day">' + weekDay[dates.getDay()] + '<bR>' + monthName[dates.getMonth()] + '</span></th>');
+				$('.cal-dates th:nth-child(' + i + ')').replaceWith('<th>' + (dates.getDate()) + ' ' + weekDay[dates.getDay()] + ' ' + monthName[dates.getMonth()] + '</th>');
 			}
 		}
+		console.log(weekofEvents);
 
 		postDates(weekofEvents).complete(function(xhr, textStatus) {  
-		var results = xhr.responseText;
-		var json = JSON.parse(results);
-		console.log(results);
-		for (i=0; i < json.length; i++) {
-			var sdateTime = json[i]['start'].split('T');
-			var edateTime = json[i]['end'].split('T');
-			var sdate = sdateTime[0].split('-');
-			var stime = sdateTime[1].split(':');
-			var eventLength = ((edateTime[1].split(':')[0] - stime[0])*50) + ((((edateTime[1].split(':')[1]/parseFloat(60)) - ((stime[1]/parseFloat(60))))*50));
-			console.log(eventLength);
-			var yPos = ((stime[1]/parseFloat(60))*50) + ((stime[0]-6)*50)
-			var xPos = 7 - (Math.abs(sdate[2] - dates.getDate()));
-			$('.calendar-body td:nth-child(' + (xPos) + ')').append('<div class="cal-event" style="top:' + yPos + 'px; height:'+ eventLength + 'px">'+json[i]['name']+'<br>' + sdateTime[1] + '<br>' + edateTime[1] + '</div>');
-
-		}
-	});
-
+		var eventsObj = new eventFormat(xhr.responseText);
+			for (i=0; i < eventsObj.size(); i++) {
+				eventsObj.sDateTime(i);
+				eventsObj.eDateTime(i);
+				var stime = eventsObj.startTime(i);
+				var etime = eventsObj.endTime(i);
+				var sdate = eventsObj.date;
+				var eventLength = eventsObj.eventLength(i);
+				var yPos = eventsObj.getYPos();
+				var xPos = eventsObj.getXPos(dates.getDate()-i);
+				
+				if (currentTimePx > yPos && date.getDate() == sdate) {
+					$('.calendar-body td:nth-child(' + (xPos) + ')').append('<div class="cal-event" style="top:' + yPos + 'px; height:'+ eventLength + 'px; background-color:#ccc; border-color:#aaa"><p>' + stime + ' - ' + etime + '<br><strong>' + json[i]['name']+'</strong><!--<a href="/deletevent/' + json[i]['id'] + '">Delete</a> --></p></div>');
+				} else {
+				$('.calendar-body td:nth-child(' + (xPos) + ')').append('<div class="cal-event" style="top:' + yPos + 'px; height:'+ eventLength + 'px"><p>' + stime + ' - ' + etime + '<br><strong>' + eventsObj.Name(i) +'</strong><!--<a href="/deletevent/' + eventsObj.id(i) + '">Delete</a> --></p></div>');
+				}
+			}
+		});
 		$(".cal-dates th").click(function(){
 			$(".cal-dates th").removeClass("cal-nav-select");
 			$(this).toggleClass("cal-nav-select");
@@ -211,29 +177,32 @@ $(document).ready(function(){
 			datesjson = JSON.stringify({ day: dates.getDate()  , month: (dates.getMonth()+1), year: dates.getFullYear() });
 			weekofEvents.push(datesjson);
 			if (dates.getDate() == date.getDate() && dates.getMonth() == date.getMonth() && dates.getFullYear() == date.getFullYear()) {
-				$('.cal-dates th:nth-child(' + i + ')').replaceWith('<th class="cal-nav-select"><span class ="date-num">' + (dates.getDate()) + '</span><span class="date-day">' + weekDay[dates.getDay()] + '<bR>' + monthName[dates.getMonth()] + '</span></th>');
+				$('.cal-dates th:nth-child(' + i + ')').replaceWith('<th class="cal-nav-select">' + (dates.getDate()) + ' ' + weekDay[dates.getDay()] + ' ' + monthName[dates.getMonth()] + '</th>');
 
 			} else {
-			$('.cal-dates th:nth-child(' + i + ')').replaceWith('<th><span class ="date-num">' + (dates.getDate()) + '</span><span class="date-day">' + weekDay[dates.getDay()] + '<bR>' + monthName[dates.getMonth()] + '</span></th>');
+			$('.cal-dates th:nth-child(' + i + ')').replaceWith('<th>' + (dates.getDate()) + ' ' + weekDay[dates.getDay()] + ' ' + monthName[dates.getMonth()] + '</th>');
 			}
 		}
-		
+		console.log(weekofEvents);
 		postDates(weekofEvents).complete(function(xhr, textStatus) {  
-		var results = xhr.responseText;
-		var json = JSON.parse(results);
-		console.log(results);
-		for (i=0; i < json.length; i++) {
-			var sdateTime = json[i]['start'].split('T');
-			var edateTime = json[i]['end'].split('T');
-			var sdate = sdateTime[0].split('-');
-			var stime = sdateTime[1].split(':');
-			var eventLength = ((edateTime[1].split(':')[0] - stime[0])*50) + ((((edateTime[1].split(':')[1]/parseFloat(60)) - ((stime[1]/parseFloat(60))))*50));
-			console.log(eventLength);
-			var yPos = ((stime[1]/parseFloat(60))*50) + ((stime[0]-6)*50)
-			var xPos = 7 - (Math.abs(sdate[2] - dates.getDate()));
-			$('.calendar-body td:nth-child(' + (xPos) + ')').append('<div class="cal-event" style="top:' + yPos + 'px; height:'+ eventLength + 'px">'+json[i]['name']+'<br>' + sdateTime[1] + '<br>' + edateTime[1] + '</div>');
-		}
-	});
+			var eventsObj = new eventFormat(xhr.responseText);
+			for (i=0; i < eventsObj.size(); i++) {
+				eventsObj.sDateTime(i);
+				eventsObj.eDateTime(i);
+				var stime = eventsObj.startTime(i);
+				var etime = eventsObj.endTime(i);
+				var sdate = eventsObj.date;
+				var eventLength = eventsObj.eventLength(i);
+				var yPos = eventsObj.getYPos();
+				var xPos = eventsObj.getXPos(dates.getDate()-i);
+				
+				if (currentTimePx > yPos && date.getDate() == sdate) {
+					$('.calendar-body td:nth-child(' + (xPos) + ')').append('<div class="cal-event" style="top:' + yPos + 'px; height:'+ eventLength + 'px; background-color:#ccc; border-color:#aaa"><p>' + stime + ' - ' + etime + '<br><strong>' + json[i]['name']+'</strong><!--<a href="/deletevent/' + json[i]['id'] + '">Delete</a> --></p></div>');
+				} else {
+				$('.calendar-body td:nth-child(' + (xPos) + ')').append('<div class="cal-event" style="top:' + yPos + 'px; height:'+ eventLength + 'px"><p>' + stime + ' - ' + etime + '<br><strong>' + eventsObj.Name(i) +'</strong><!--<a href="/deletevent/' + eventsObj.id(i) + '">Delete</a> --></p></div>');
+				}
+			}
+		});
 		$(".cal-dates th").click(function(){
 			$(".cal-dates th").removeClass("cal-nav-select");
 			$(this).toggleClass("cal-nav-select");
