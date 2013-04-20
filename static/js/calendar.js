@@ -8,7 +8,34 @@ Author: Joseph Peacock
 Contact: japeacoc@buffalo.edu
 Page: calendar.js  */
 
-$(document).ready(function(){
+function put(data) {
+	return $.ajax({
+	        type: "GET",
+	        url: "/search/query",
+	        data: data,	           
+	});
+}
+
+$(document).ready(function() {
+	$("#appendedInputButton").keyup(function() {
+		put("q=" + $(this).val()).complete(function(xhr, textStatus) {
+			var res = JSON.parse(xhr.responseText);
+			console.log(res.length);
+			$('#results').empty();
+			if (res.length > 0) {
+				for (i =0; i < 5; i++) {
+					if (res[i] != null) {
+						$('#results').append('<li>' + res[i]['name'] + '<br><span>' + res[i]['title'] + '</span></li>');
+					}
+				}	 
+			} else {
+				$('#results').append('<li><h5>No results were found for your search</h5></li>');
+			}
+	    });  
+	});		
+});
+
+/*$(document).ready(function(){
 
 	var times = [
 		"8:00 am",
@@ -46,8 +73,4 @@ $(document).ready(function(){
 	});
 
 
-});$(document).ready(function(){
-	
-
-	
-});
+});*/

@@ -10,11 +10,7 @@ body {
 	font-family: 'Open Sans', sans-serif;
 	height: 100%;
 	overflow-x:hidden; 
-}
-
-.container {
-	margin: 0 auto;
-	width: 1140px;
+	background-color: #f1f1f1;
 }
 
 .header {
@@ -34,9 +30,24 @@ table {
 	border-spacing: 0;
 }
 
-.container {
-	width: 1140px;
-	margin:0 auto;
+a {
+	text-decoration: none;
+	color:#041A9B;
+}
+
+a:hover {
+	color:#555;
+}
+
+h2 {
+	color: #333;
+}
+
+p {
+	padding: 15px 0 15px 0;
+	color:#333;
+	font-size: 0.9em;
+	line-height: 2em;
 }
 
 
@@ -205,3 +216,126 @@ table {
 	width: 100%;
 	background-color: red;
 }
+
+/* ------------------------------- */
+/*  Page Styling                   */
+/* ------------------------------- */
+
+.footer {
+	padding: 20px;
+	color: #555;
+	font-size: .75em;
+}
+
+.footer p {
+	float: right;
+}
+
+.main h2 {
+	font-size: 1.5em;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 40px;
+}
+
+.main {
+	padding-top: 80px;
+	background-color: #fff;
+	-webkit-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .1);
+	box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .1);
+}
+
+.main .row .span12, 
+.main .row .span4, 
+.main .row .span8 {
+	margin-left: 15px;
+	margin-right: 15px;
+}
+
+.progression {
+	margin-bottom: 30px;
+}
+
+.progression li {
+	text-align: center;
+	display: inline-block;
+	padding-bottom: 20px;
+	width: 25%;
+}
+
+.progression li.done {
+	border-bottom: 3px solid green;
+}
+
+.progression li.todo {
+	border-bottom: 3px solid silver;
+	color:#999;
+}
+
+.progression li:after {
+    content: "\00a0\00a0";
+}
+
+.progression li:before {
+    position: relative;
+    bottom: -1.8em;
+    float: left;
+    left: 50%;
+    line-height: 1em;
+}
+
+.progression li.done:before {
+    content: "\2713";
+    color: white;
+    background-color: yellowgreen;
+    height: 1.2em;
+    width: 1.2em;
+    line-height: 1.2em;
+    border: none;
+    border-radius: 1.2em;
+}
+.progression li.todo:before {
+    content: "\039F";
+    color: silver;
+    background-color: white;
+    height: 0.8em;
+    width: 0.8em;
+    font-size: 1.5em;
+    bottom: -1.2em;
+}
+
+.search-split {
+	margin-top: 30px;
+}
+
+.search-split .span6 {
+	border-left: 1px solid #ddd;
+}
+
+.event-types {
+	margin-top: 20px;
+
+}
+
+.event-types li {
+	margin-bottom: 15px;
+}
+
+#results {
+	margin-bottom: 30px;
+}
+
+#results li {
+	padding: 10px 0 10px 0;
+	font-size: 1.2em;
+	border-bottom: 1px solid #ddd;
+}
+
+#results li span {
+	padding-top: 5px;
+	font-size: 0.6em;
+}
+
+
+
+

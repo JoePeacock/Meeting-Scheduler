@@ -190,23 +190,30 @@ def getCal():
 	eventsArray = []
 	jsonDate = request.form
 	datesArray = json.loads(jsonDate['events'])
-	print str(datesArray) + "\n" 
 	beginWeek = str(datesArray[0]['month'])+str(datesArray[0]['day'])+str(datesArray[0]['year'])
 	start = datetime.datetime.strptime(beginWeek, "%m%d%Y")
-	print start
 	endOfWeek = str(datesArray[len(datesArray)-1]['month'])+str(datesArray[len(datesArray)-1]['day'])+str(datesArray[len(datesArray)-1]['year'])
 	end = datetime.datetime.strptime(endOfWeek, "%m%d%Y")
-	print end
 	if jsonDate['user'] == 'none' or jsonDate['user'] == '':
 		events = g.db.query('SELECT * FROM events WHERE calid = %s AND start = %s OR end = %s OR start between %s AND %s ORDER BY start DESC', 0, start, end, start, end)	
 	else: 
 		username = jsonDate['user']
 		events = g.db.query('SELECT * FROM events INNER JOIN users ON events.calid = users.id WHERE username = %s AND start = %s OR end = %s OR start between %s and  %s ORDER BY start DESC', username, start, end, start, end)
 	for event in events:
-		print str(event) + "\n"
 		eventsArray.append(event)	
 	dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 	return json.dumps(eventsArray, default=dthandler)
+
+
+@app.route('/search/<query>', methods=["GET"])
+def searchFaculty(query):
+	query = request.args['q']
+	query = query.lower().replace(' ', '')
+	query = "%"+query+"%"
+	print query
+	finduser = g.db.query('SELECT * FROM users WHERE username LIKE %s', query)
+	dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
+	return json.dumps(finduser, default=dthandler)
 
 
 if __name__ == '__main__':

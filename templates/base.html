@@ -13,13 +13,14 @@ Page: base.html
 <head>
 	<title>Meeting Scheduler</title>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="../static/css/bootstrap.css">
+	<link rel="stylesheet" href="../static/css/bootstrap-responsive.css">
+	<link rel="stylesheet" href="../static/css/reset.css">
 	<link rel="stylesheet" href="../static/css/styles.css">	
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 	<script src="../static/js/events.js"></script>
 	<script src="../static/js/base.js"></script>
 	<script src="../static/js/calendar.js"></script>
-
-
 </head>
 
 <body>
@@ -31,3 +32,10 @@ Page: base.html
 
 	
 {% block content %}{% endblock %}
+
+
+<div class="container">
+	<div class="footer">
+		<p>Built by <a href="http://www.japeacock.com">Joseph Peacock</a></p>
+	</div>
+</div>
