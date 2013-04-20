@@ -26,3 +26,12 @@ CREATE TABLE IF NOT EXISTS events (
 	end TIMESTAMP,
 	calid INT(8)
 );
+
+
+CREATE TABLE IF NOT EXISTS posts (
+	id SERIAL,
+	name VARCHAR(255),
+	song TEXT,
+	url VARCHAR(255),
+	date TIMESTAMP,
+);
