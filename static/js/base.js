@@ -1,4 +1,4 @@
-/* This Meeting Scheduler is written by Joseph Peacock CEN/EE 2016' 
+/* This Meeting Schedule is written by Joseph Peacock CEN/EE 2016' 
 For the University at Buffalo (SUNY) - Computer Science and Engineering Department 
 
 Date: Janurary 2013 
@@ -48,7 +48,7 @@ $(document).ready(function(){
 	var pos = 0;
 	var neg = 0;
 	var index = 0;
-	var weekofEvents = new Array();
+	var weekofEvents = new Array()
 
 	$('.calendar-body td').css('height', times.length*50 + 'px');
 

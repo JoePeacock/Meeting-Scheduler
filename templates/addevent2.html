@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+	{% if message %}
+	<p>{{ message }}</p>
+	{% endif %}
+
+	<div class="row main">
+		<div class="span12">
+			<div class="row">
+				<div class="span12">
+					<div class="page-title">
+						<h2>Create Event</h2>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="span12">
+					<ul class="progression">
+					   <li class="done">1. Choose Event Type</li><!--
+					--><li class="done">2. Event Details</li><!--
+					--><li class="todo">4. Complete</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="span12">
+					<p>Please fill out
+					the event information below. </p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span12 step2">
+					<form>
+					<input type="text" name="eventname" placeholder="Untitled event"></br>
+					<div class="timeinput">
+					<input type="text" name="starttime" value="4/27/2013">
+					<input type="text" name="starttime" value="4:00 pm">
+					 to 
+					 <input type="text" name="endtime" value="5:00 pm">
+					 <input type="text" name="enddate" value="4/27/2013"></br>
+					 </div>
+					 <div class="row">
+						 <div class="span1 desc">
+
+							 <strong> Where: </strong> 
+						 </div>
+						 <div class="span11">
+							 <input type="text" name="location"></br>
+				 		</div>
+					</div>
+					<div class="row">
+						<div class="span1 desc">
+
+							<strong>Description:</strong>
+						       
+						
+						</div>
+						<div class="span11">
+							<textarea rows="4" name= "description" placeholder="Event description here.."></textarea></br>
+						</div>
+					 	</div>
+					</div>
+
+					<button class="btn btn-success">Next</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+{% endblock %}
+
+
+

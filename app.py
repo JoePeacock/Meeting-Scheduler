@@ -14,7 +14,7 @@ import datetime
 import time
 import json
 import time
-from tornado.database import Connection
+from torndb import Connection
 from flask import Flask, g, request
 
 import config
@@ -136,7 +136,7 @@ def addEventUser(username):
 			addevent = g.db.execute('INSERT INTO events (name, location, description, start, end, calid) values (%s, %s, %s, %s, %s, %s)', title, location, desc, startdaytime, enddaytime, calid)
 			if addevent:
 				message = "Event added succesfully"
-		return flask.render_template("addevent.html", message=message)
+		return flask.render_template("addevent2.html", message=message)
 	
 
 # def addUser()
@@ -211,7 +211,7 @@ def searchFaculty(query):
 	query = query.lower().replace(' ', '')
 	query = "%"+query+"%"
 	print query
-	finduser = g.db.query('SELECT * FROM users WHERE username LIKE %s', query)
+	finduser = g.db.query('SELECT * FROM users WHERE username LIKE %s LIMIT 5', query)
 	dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 	return json.dumps(finduser, default=dthandler)
 

@@ -25,7 +25,10 @@ $(document).ready(function() {
 			if (res.length > 0) {
 				for (i =0; i < 5; i++) {
 					if (res[i] != null) {
-						$('#results').append('<li>' + res[i]['name'] + '<br><span>' + res[i]['title'] + '</span></li>');
+						$('#results').append('<li><a href="/addevent/' + res[i]['username'] + 
+							'">' 
+						+ res[i]['name'] + '</a><br><span>' + res[i]['title'] + '</span></div></div></li>');
+
 					}
 				}	 
 			} else {

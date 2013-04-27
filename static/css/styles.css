@@ -260,7 +260,7 @@ p {
 	text-align: center;
 	display: inline-block;
 	padding-bottom: 20px;
-	width: 25%;
+	width: 33%;
 }
 
 .progression li.done {
@@ -335,6 +335,23 @@ p {
 	padding-top: 5px;
 	font-size: 0.6em;
 }
+
+.results {
+	min-height:350px;
+}
+.step2 {
+    padding-bottom:30px;
+}   
+
+.timeinput input[type="text"] {
+	width:100px;
+	text-align:center;
+}
+
+.desc {
+	text-align:right;
+}
+
 
 
 
