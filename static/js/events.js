@@ -1,3 +1,13 @@
+/* This Meeting Schedule is written by Joseph Peacock CEN/EE 2016' 
+For the University at Buffalo (SUNY) - Computer Science and Engineering Department 
+
+Date: April 2013 
+Author: Joseph Peacock 
+Contact: japeacoc@buffalo.edu
+Page: events.js
+
+*/
+
 function formatTime(timePos) {
 	if (timePos[0] > 12) {
 		if(timePos[1] == '00') {
