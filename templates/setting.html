@@ -1,0 +1,81 @@
+<!-- This Meeting Scheduler is written by Joseph Peacock CEN/EE 2016' 
+For the University at Buffalo (SUNY) - Computer Science and Engineering Department 
+
+Date: Janurary 2013 
+Author: Joseph Peacock 
+Contact: japeacoc@buffalo.edu
+Page: index.html
+
+-->
+
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+	<div class="row main">
+		<div class="span12">
+			<div class="row">
+				<div class="span12">
+					<div class="page-title">
+						<h2>Calendar Settings</h2>
+					</div>
+					<p>Delete or add new users here. To add, simply input a name and title and click add. You can also delete a user. <br><span class="label label-warning">WARNING:</span>If you delete a calendar, you will delete all of the information with that user along with their calendar!</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span12">
+					<h3 class="sub">Add User</h3>
+					{% if output %}
+						<p class="notice"><span class="label label-success">Success:</span> {{ output }}</p>
+					{% endif %}
+
+					{% if error %}
+						<p class="notice"><span class="label label-important">Error:</span> {{ error }}</p>
+					{% endif %}
+				</div>
+			</div>
+			<div class="row">
+				<div class="span12 adduser">
+					<form method="POST">						
+						Name: <input type="text" class="adduser span4" name="userName" placeholder="Name of person to add..">
+						Title: <input type="text" class="adduser span4" name="userTitle" placeholder="Title..">
+						<input type="submit" class="btn" value="Create User">						
+					</form>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="span12">
+					<h3 class="sub">Delete Current Calendars</h3>
+					<ul class="users">
+						{% for user in userList %}
+						<li>
+						{{ user.name }}<br> <span>{{ user.title }}</span>
+						<a href="#myModal" data-toggle="modal" id="#deleteuser" class="pull-right">Delete</a>
+	 
+						<!-- Modal -->
+						<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						  <div class="modal-header">
+						    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						    <h3 id="myModalLabel">Delete User Confirmation.</h3>
+						  </div>
+						  <div class="modal-body">
+						    <p>Are you sure you want to delete {{ user.name }}s calendar?<br>
+						    <span class="label label-warning">WARNING:</span> You will delete all of the events associated with this user as well!</p>
+						  </div>
+						  <div class="modal-footer">
+						    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+						    <a href="{{ url_for('deleteuser', userid = user.id) }}"><button class="btn btn-danger">Delete</button></a>
+						  </div>
+						</div>
+						</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}

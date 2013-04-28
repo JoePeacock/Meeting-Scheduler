@@ -30,15 +30,35 @@ $(document).ready(function() {
 		});
 	});
 
+	put("q=").complete(function(xhr, textStatus) {
+		var res = JSON.parse(xhr.responseText);
+		for(i=0; i < 5; i++) {
+			$('#resultshome').append('<li><a href="/calendar/' + res[i]['username'] + 
+			'">' + res[i]['name'] + '</a><br><span>' + res[i]['title'] + '</span></div></div></li>');
+		}
+		if (res.length < 5) {
+			$('#displayedResults').append(res.length);
+		} else {
+			$('#displayedResults').append('5');
+		}
+
+		$('#numResults').append(res.length);
+
+	});
+
+
 	$("#appendedInputButton").keyup(function() {
 		put("q=" + $(this).val()).complete(function(xhr, textStatus) {
 			var res = JSON.parse(xhr.responseText);
 			$('#results').empty();
+			$('#resultshome').empty();
 			if (res.length > 0) {
 				for (i =0; i < 5; i++) {
 					if (res[i] != null) {
 						var name = res[i]['name'];
 						console.log(name);
+						$('#resultshome').append('<li><a href="/calendar/' + res[i]['username'] + 
+							'">' + res[i]['name'] + '</a><br><span>' + res[i]['title'] + '</span></div></div></li>');
 						$('#results').append('<li><a  name="' + res[i]['username'] + '">' 
 						+ res[i]['name'] + '</a><br><span>' + res[i]['title'] + '</span></div></div></li>');
 						$('#results li a').click(function(){
@@ -47,7 +67,18 @@ $(document).ready(function() {
 							$(this).attr('href', url + username + "?eventType=" + eventType + '&name=' + name);
 						});
 					}
-				}	 
+				}
+
+				$('#displayedResults').empty();
+				$('#numResults').empty();	 
+				if (res.length <= 5) {
+					$('#displayedResults').append(res.length);
+				} else {
+					$('#displayedResults').append('5');
+				}
+
+				$('#numResults').append(res.length);
+
 			} else {
 				$('#results').append('<li><h5>No results were found for your search</h5></li>');
 			}
@@ -74,4 +105,5 @@ $(document).ready(function() {
 
 	}
 	$('.step2').append('<input type="hidden" name="' + splitArray[0] + '" value="' + eType + '">');
+
 });

@@ -55,15 +55,37 @@ def hello():
 		message = False;
 	return flask.render_template('index.html', userList = userList, message=message)
 
+@app.route('/settings', methods=['POST', 'GET'])
+def calManage():
+	error = None
+	output = None
+	if flask.request.method == 'POST':
+		name = flask.request.form['userName']
+		title = flask.request.form['userTitle']
+		username = name.lower().replace(' ', '')
+		datetoday = datetime.date.today()
+		checkuser = g.db.query('SELECT username FROM users WHERE username = %s', username)
+		if checkuser:
+			error = "There is a user with that name already. Please try again."
+		else:
+			query = g.db.execute('INSERT INTO users (name, username, title, dateadded) VALUES (%s, %s, %s, %s)', name, username, title, str(datetoday))
+			if query:
+				output = "User " + name + " was added succesfully!"
+			else:
+				error = 'There was an error adding the user to the database'
+	userList = g.db.iter('select * from users')
+	return flask.render_template('setting.html', userList = userList, error=error, output=output)
+
 # def calendarFilter()
 # Renders "calendarview.html"
 # Function: Displays the general Calendar for all calid 
 @app.route('/calendar/', methods=['POST', 'GET'])
 def calendarFilter():
 	events = [];
-	events = g.db.query('SELECT * FROM events INNER JOIN users ON events.calid = users.id')
+	# events = g.db.query('SELECT * FROM events INNER JOIN users ON events.calid = users.id')
 	genEvents = g.db.query('SELECT * FROM events WHERE calid = 0');
 	events.append(genEvents);
+	print events
 	return flask.render_template('viewcalendar.html', events = events)
 
 
@@ -75,7 +97,6 @@ def calendarFilter():
 def viewCalendar(username):
 	events = None
 	values = g.db.get('SELECT id, name from users where username = %s', username) 
-	print values
 	if values == None:
 		error =  "No User! It seems that you were trying to acces a page that doesn't exist!"
 		return flask.render_template("404.html", error=error)
@@ -184,7 +205,7 @@ def deleteuser(userid):
 	g.db.execute('DELETE FROM users WHERE id = %s', userid)
 	g.db.execute('DELETE FROM events WHERE calid = %s', userid)
 	print "User with id: " + str(userid) + 'was deleted!'
-	return flask.redirect(flask.url_for('hello'))
+	return flask.redirect(flask.url_for('calManage'))
 
 # def deleteEvent()
 # Int eventid is passed to url
@@ -209,9 +230,12 @@ def getCal():
 		events = g.db.query('SELECT * FROM events WHERE calid = %s AND start = %s OR end = %s OR start between %s AND %s ORDER BY start DESC', 0, start, end, start, end)	
 	else: 
 		username = jsonDate['user']
-		events = g.db.query('SELECT * FROM events INNER JOIN users ON events.calid = users.id WHERE username = %s AND start = %s OR end = %s OR start between %s and  %s ORDER BY start DESC', username, start, end, start, end)
-	for event in events:
-		eventsArray.append(event)	
+		calid = str(g.db.get('SELECT id from users where username = %s', username)['id'])
+		events = g.db.query('SELECT * FROM events WHERE calid = %s ORDER BY start DESC', calid)
+		# AND start = %s OR end = %s OR start between %s and  %s ORDER BY start DESC', calid, start, end, start, end
+	for eventItem in events:
+		if (eventItem['start'] >= start and eventItem['start'] <= end):
+			eventsArray.append(eventItem)
 	dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 	return json.dumps(eventsArray, default=dthandler)
 
@@ -221,8 +245,7 @@ def searchFaculty(query):
 	query = request.args['q']
 	query = query.lower().replace(' ', '')
 	query = "%"+query+"%"
-	print query
-	finduser = g.db.query('SELECT * FROM users WHERE username LIKE %s LIMIT 5', query)
+	finduser = g.db.query('SELECT * FROM users WHERE username LIKE %s', query)
 	dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 	return json.dumps(finduser, default=dthandler)
 

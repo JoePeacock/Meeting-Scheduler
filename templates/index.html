@@ -8,24 +8,52 @@ Page: index.html
 
 -->
 
-<!doctype html>
-<html>
-<head>
-	<title>Meeting Scheduler</title>
-</head>
+{% extends "base.html" %}
+{% block content %}
 
-<body>
+<div class="container">
+	<div class="row main">
+		<div class="span12">
+			<div class="row">
+				<div class="span12">
+					<div class="page-title">
+						<h2>Computer Science & Engineering Scheduling Manager</h2>
+					</div>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+					<div class="subtitle">
+						<h3>Select a calendar to view</h3>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span3">
+					<P><a href="/calendar/">GENERAL CALEDNAR! YAY!</a></P>
 
-	<form method="post" action="/">
-		<input type="text" name='searchquery'>
-		<input type="submit" value ="search">
-	</form>
+				</div>
+				<div class="span1">
+					<p>Or</p>
+				</div>
+				<div class="span7">
+						<h3>Choose a Faculty Member</h3>
+						<br>
+					<form>
+						<div class="input-append">
+							<input class="span3" id="appendedInputButton" placeholder="Search for faculty.." type="text">
+							<button class="btn" type="button">Go!</button>
+						</div>
+					</form>
+						<p>Showing <span id="displayedResults"></span> of <span id="numResults"></span> results.</p>
+						<ul id="resultshome"></ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
-	<p>  {% if message %} {{ message }} {% endif %}</p>
 
-	{% for user in userList %}
-	<h3> <a href="/calendar/{{ user.username }}">{{ user.name }}</a><br> {{ user.title }}</h3>
-	<a href="{{ url_for('deleteuser', userid = user.id) }}">Delete</a>
-	{% endfor %}
-
-</body>	
+{% endblock %}

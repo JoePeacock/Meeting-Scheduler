@@ -13,6 +13,7 @@ Page: base.html
 <head>
 	<title>Meeting Scheduler</title>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-modal.js"></script>
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/redmond.css') }}">
@@ -35,9 +36,9 @@ Page: base.html
 				</div>
 				<div class="span8">
 					<ul class="pull-right navi">
-						<li><a href="{{ url_for('hello') }}">Home</a></li><!--
+						<li><a href="{{ url_for('hello') }}">View Calendars</a></li><!--
 						--><li><a href="{{ url_for('addEvent') }}">Create Event</a></li><!--
-						--><li><a href="{{ url_for('calendarFilter') }}">View Calendars</a></li>
+						--><li><a href="{{ url_for('calManage') }}">Manage Calendars</a></li>
 					</ul>
 				</div>
 			</div>
@@ -53,3 +54,6 @@ Page: base.html
 		<p>Built by <a href="http://www.japeacock.com">Joseph Peacock</a></p>
 	</div>
 </div> -->
+
+</body>
+</html>

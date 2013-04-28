@@ -68,17 +68,17 @@ $(document).ready(function(){
 	}
 
 	var startDay = JSON.parse(weekofEvents[0]);
-	$('.current-week').append(startDay['day'] + " of " + monthName[startDay['month']] + ", " + startDay['year']);
+	$('.current-week').append(startDay['day'] + " of " + monthName[startDay['month']-1] + ", " + startDay['year']);
 	var currentTD = Math.ceil(Math.abs((date - dates)/(1000*60*60*24)));
 
 	var currentTimePx = (((date.getHours()-6)*50) + (date.getMinutes()/parseFloat(60)*50));
-	var today = $('.calendar-body td:nth-child(' + (7-currentTD) + ')');	 
+	var today = $('.calendar-body td:nth-child(' + (7-currentTD) + ')');	
 	today.css('background-color', '#efefef'); 
 	today.append('<div id="current-time" style="top:'+ currentTimePx + 'px; "></hr>')
-	console.log(weekofEvents);
 
 	postDates(weekofEvents).complete(function(xhr, textStatus) {  
 		var eventsObj = new eventFormat(xhr.responseText);
+		console.log(eventsObj);
 		for (i=0; i < eventsObj.size(); i++) {
 			eventsObj.sDateTime(i);
 			eventsObj.eDateTime(i);
@@ -115,6 +115,9 @@ $(document).ready(function(){
 	});
 
 	$(".prev-week").click(function(){
+		$('.calendar-body td:nth-child(' + (7-currentTD) + ')').css('background-color', '#FFF');
+		$('.calendar-body td:nth-child(' + (7-currentTD) + ') #current-time').remove();
+
 		$('.calendar-body .cal-event').remove();
 		var endweek = $('.week li:nth-child(7)').text();
 
@@ -134,6 +137,10 @@ $(document).ready(function(){
 			if (dates.getDate() == date.getDate() && dates.getMonth() == date.getMonth() && dates.getFullYear() == date.getFullYear()) {
 				$('.cal-dates td:nth-child(' + i + ')').replaceWith('<td class="cal-nav-select">' + (dates.getDate()) + ' ' + weekDay[dates.getDay()] + ' ' + monthName[dates.getMonth()] + '</td>');
 				$('.calendar-head .cal-dates td').css("width", dayWidth + 'px');
+				var currentTimePx = (((date.getHours()-6)*50) + (date.getMinutes()/parseFloat(60)*50));
+				var today = $('.calendar-body td:nth-child(' + (7-currentTD) + ')');	
+				today.css('background-color', '#efefef'); 
+				today.append('<div id="current-time" style="top:'+ currentTimePx + 'px; "></hr>')
 
 			} else {
 				$('.cal-dates td:nth-child(' + i + ')').replaceWith('<td>' + (dates.getDate()) + ' ' + weekDay[dates.getDay()] + ' ' + monthName[dates.getMonth()] + '</td>');
@@ -169,6 +176,9 @@ $(document).ready(function(){
 		});
 
 	$(".next-week").click(function(){
+		$('.calendar-body td:nth-child(' + (7-currentTD) + ')').css('background-color', '#FFF');
+		$('.calendar-body td:nth-child(' + (7-currentTD) + ') #current-time').remove();
+
 		$('.calendar-body .cal-event').remove();		
 		var endweek = $('.cal-dates td:nth-child(7)').text();
 
@@ -185,7 +195,11 @@ $(document).ready(function(){
 			weekofEvents.push(datesjson);
 			if (dates.getDate() == date.getDate() && dates.getMonth() == date.getMonth() && dates.getFullYear() == date.getFullYear()) {
 				$('.cal-dates td:nth-child(' + i + ')').replaceWith('<td class="cal-nav-select">' + (dates.getDate()) + ' ' + weekDay[dates.getDay()] + ' ' + monthName[dates.getMonth()] + '</td>');
-								$('.calendar-head .cal-dates td').css("width", dayWidth + 'px');
+				$('.calendar-head .cal-dates td').css("width", dayWidth + 'px');
+				var currentTimePx = (((date.getHours()-6)*50) + (date.getMinutes()/parseFloat(60)*50));
+				var today = $('.calendar-body td:nth-child(' + (7-currentTD) + ')');	
+				today.css('background-color', '#efefef'); 
+				today.append('<div id="current-time" style="top:'+ currentTimePx + 'px; "></hr>')
 
 			} else {
 				$('.cal-dates td:nth-child(' + i + ')').replaceWith('<td>' + (dates.getDate()) + ' ' + weekDay[dates.getDay()] + ' ' + monthName[dates.getMonth()] + '</td>');

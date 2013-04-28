@@ -243,6 +243,7 @@ p {
 	border: none;
 	width: 100%;
 	background-color: red;
+	z-index: 5;4
 }
 
 .bg {
@@ -275,7 +276,6 @@ p {
 	font-size: 1.5em;
 	padding-bottom: 20px;
 	border-bottom: 1px solid #ddd;
-	margin-bottom: 40px;
 }
 
 .main {
@@ -294,6 +294,7 @@ p {
 
 .progression {
 	margin-bottom: 30px;
+	margin-top: 40px;
 }
 
 .progression li {
@@ -301,6 +302,11 @@ p {
 	display: inline-block;
 	padding-bottom: 20px;
 	width: 33%;
+}
+
+
+.main h3 {
+	font-weight: bold;
 }
 
 .progression li.done {
@@ -361,7 +367,7 @@ p {
 	margin-bottom: 15px;
 }
 
-#results {
+#resultshome {
 	margin-bottom: 30px;
 }
 
@@ -377,6 +383,25 @@ p {
 }
 
 .results {
+	min-height:350px;
+
+}#resultshome {
+	margin-bottom: 30px;
+}
+
+#resultshome li {
+	padding: 10px 0 10px 0;
+	font-size: 1.2em;
+	border-bottom: 1px solid #ddd;
+	padding-left: 10px;
+}
+
+#resultshome li span {
+	padding-top: 5px;
+	font-size: 0.6em;
+}
+
+.resultshome {
 	min-height:350px;
 }
 
@@ -485,4 +510,28 @@ p {
 
 .logo {
 	padding-top: 12px;
+}
+
+.sub {
+	padding-bottom: 10px;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 10px;
+}
+
+.adduser {
+	padding-bottom: 30px;
+	padding-top: 20px;
+}
+
+.users li {
+	padding: 15px 20px 15px 20px;
+	border-bottom: 1px solid #ddd;
+}
+
+.users li span {
+	font-size: .8em;
+}
+
+.notice {
+	padding: 5px 0 5px 0;
 }
