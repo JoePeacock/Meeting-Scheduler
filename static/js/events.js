@@ -62,11 +62,15 @@ eventFormat.prototype.endTime = function(i) {
 };
 
 eventFormat.prototype.getXPos = function(day) {
-	return (7 - (Math.abs(this.date[2] - day)));
+	diff = Math.ceil(Math.abs((7 - (Math.abs(this.date[2] - day)))));
+	if (diff > 6) {
+		diff = diff-16;
+	}
+	return diff;
 };
 
 eventFormat.prototype.getYPos = function() {
-	return ((this.stime[1]/parseFloat(60))*50) + ((this.stime[0]-6)*50) 
+	return ((this.stime[1]/parseFloat(60))*50) + ((this.stime[0]-6)*50);
 };
 
 eventFormat.prototype.eventLength = function(i) {

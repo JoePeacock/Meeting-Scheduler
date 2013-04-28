@@ -2,10 +2,6 @@
 {% block content %}
 
 <div class="container">
-	{% if message %}
-	<p>{{ message }}</p>
-	{% endif %}
-
 	<div class="row main">
 		<div class="span12">
 			<div class="row">
@@ -21,14 +17,15 @@
 					<ul class="progression">
 					   <li class="done">1. Choose Event Type</li><!--
 					--><li class="done">2. Event Details</li><!--
-					--><li class="todo">4. Complete</li>
+					--><li class="todo">3. Complete</li>
 					</ul>
 				</div>
 			</div>
 
+	<div id="step2Disp">
 		<div class="addeventForm">
 			<div class="row">
-				<div class="span11">
+				<div class="span11 topinfo">
 					<p>Please fill out
 					the event information below. </p>
 				</div>
@@ -39,8 +36,8 @@
 			<div class="row">
 				<div class="span11 saveButton">
 					<a href="/addevent"><button class="btn">Back</button></a>
-					<input type="submit" class="btn btn-warning" value="SAVE">
-					<a href="/"><button class="btn">Discard</button></a>
+					<input type="submit" class="btn btn-warning" id="save-event" value="SAVE">
+					<a href="/calendar/"><button class="btn">Discard</button></a>
 				</div>
 			</div>
 
@@ -48,14 +45,14 @@
 				<div class="span10 step2">
 					<input type="text" id="eventTitle-form" name="eventTitle" placeholder="Untitled event">
 					<div class="timeinput">
-						<input type="text" name="eventDateStart" value="4/27/2013">
-						<input type="text" name="startTime" value="4:00 pm">
+						<input type="text" name="eventDateStart" class="datepicker" value="4/27/2013">
+						<input type="text" class="timeinput" name="startTime" value="4:00 pm">
 						 to 
-						 <input type="text" name="endTime" value="5:00 pm">
-						 <input type="text" name="eventDateEnd" value="4/27/2013">
-						 <div class="checkbox-repeat">
+						 <input type="text" class="timeinput" name="endTime" value="5:00 pm">
+						 <input type="text" name="eventDateEnd" class="datepicker" value="4/27/2013">
+						<!--  <div class="checkbox-repeat">
 						 	<input type="checkbox"><span>All Day</span> <input type="checkbox"><span>Repeat..</span>
-						 </div>
+						 </div> -->
 					</div>
 				</div>
 			</div>
@@ -75,6 +72,7 @@
 
 			</form>	
 		</div>
+	</div>
 
 		</div>
 	</div>

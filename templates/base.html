@@ -12,8 +12,10 @@ Page: base.html
 <html>
 <head>
 	<title>Meeting Scheduler</title>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/redmond.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-responsive.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }} ">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }} ">	
@@ -21,12 +23,24 @@ Page: base.html
 	<script src="{{ url_for('static', filename='js/events.js') }}"></script>
 	<script src="{{ url_for('static', filename='js/base.js') }}"></script>
 	<script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/jqueryui.js') }}"></script>
 </head>
 
 <body>
 	<div class="header">
 		<div class="container">
-			<img src="{{ url_for('static', filename='img/logo.png') }}" width="350">
+			<div class="row">
+				<div class="span4 logo">
+					<img src="{{ url_for('static', filename='img/logo.png') }}" width="350">
+				</div>
+				<div class="span8">
+					<ul class="pull-right navi">
+						<li><a href="{{ url_for('hello') }}">Home</a></li><!--
+						--><li><a href="{{ url_for('addEvent') }}">Create Event</a></li><!--
+						--><li><a href="{{ url_for('calendarFilter') }}">View Calendars</a></li>
+					</ul>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -34,8 +48,8 @@ Page: base.html
 {% block content %}{% endblock %}
 
 
-<div class="container">
+<!-- <div class="container">
 	<div class="footer">
 		<p>Built by <a href="http://www.japeacock.com">Joseph Peacock</a></p>
 	</div>
-</div>
+</div> -->

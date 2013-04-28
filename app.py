@@ -118,30 +118,32 @@ def addEvent():
 @app.route('/addevent/<username>', methods=["GET", "POST"])
 def addEventUser(username):
 	message = None;
-	values = g.db.get('SELECT username, id from users where username = %s', username) 
-	if values == None:
-		error =  "No User! It seems that you were trying to acces a page that doesn't exist!"
-		return flask.render_template("404.html", error=error)
+	if (username == "general"):
+		calid = 0
 	else:
-		if flask.request.method == 'POST':
-			eventType = None;
-			if flask.request.form['eventType'] == "undefined":
-				eventType = flask.request.form['eventType']
-				# Add to post and Add column to DB
-			title = flask.request.form['eventTitle']
-			desc = flask.request.form['eventDesc']
-			location = flask.request.form['eventLocation']
-			dateStart = flask.request.form['eventDateStart'].replace("/", '')
-			dateEnd = flask.request.form['eventDateEnd'].replace("/", '')
-			start = flask.request.form['startTime'].replace(":", '').replace(" ", '')
-			end = flask.request.form['endTime'].replace(":", '').replace(" ", '')
-			startdaytime = datetime.datetime.strptime(dateStart+start, "%m%d%Y%I%M%p")
-			enddaytime = datetime.datetime.strptime(dateEnd+end, "%m%d%Y%I%M%p")
-			calid = values["id"]
-			addevent = g.db.execute('INSERT INTO events (name, location, description, start, end, calid) values (%s, %s, %s, %s, %s, %s)', title, location, desc, startdaytime, enddaytime, calid)
-			if addevent:
-				message = "Event added succesfully"
-		return flask.render_template("addevent2.html", message=message)
+		values = g.db.get('SELECT username, id from users where username = %s', username) 
+		if values == None:
+			error =  "No User! It seems that you were trying to acces a page that doesn't exist!"
+			return flask.render_template("404.html", error=error)
+		calid = values["id"]
+	if flask.request.method == 'POST':
+		eventType = None;
+		if flask.request.form['eventType'] != "undefined":
+			eventType = flask.request.form['eventType']
+			# Add to post and Add column to DB
+		title = flask.request.form['eventTitle']
+		desc = flask.request.form['eventDesc']
+		location = flask.request.form['eventLocation']
+		dateStart = flask.request.form['eventDateStart'].replace("/", '')
+		dateEnd = flask.request.form['eventDateEnd'].replace("/", '')
+		start = flask.request.form['startTime'].replace(":", '').replace(" ", '')
+		end = flask.request.form['endTime'].replace(":", '').replace(" ", '')
+		startdaytime = datetime.datetime.strptime(dateStart+start, "%m%d%Y%I%M%p")
+		enddaytime = datetime.datetime.strptime(dateEnd+end, "%m%d%Y%I%M%p")
+		addevent = g.db.execute('INSERT INTO events (name, location, description, start, end, calid) values (%s, %s, %s, %s, %s, %s)', title, location, desc, startdaytime, enddaytime, calid)
+		if addevent:
+			message = "Event added succesfully"
+	return flask.render_template("addevent2.html", message=message)
 
 @app.route('/addevent/complete/', methods=["GET", "POST"])
 def completeAddEvent():

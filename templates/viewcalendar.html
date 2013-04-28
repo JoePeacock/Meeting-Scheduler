@@ -1,24 +1,60 @@
 {% extends "base.html" %}
 {% block content %}
+<div class="bg">
+	<div class="static">
 
-<div class="static">
+		<div class="nav-status">
+			<div class="container">
+				<div class="row">
+					<div class="span4">
+						<p>Week of <span class="current-week"> </span> <a href="#" class="prev-week">Prev</a> <a href="#" class="next-week">Next</a></P>
+					</div>
+				</div>
+			</div>
+		</div>
 
-	<div class="nav-status">
-		<div class="container">
-
-			<p>Week of 24 of Februray, 2013 <a href="#" class="prev-week">Prev</a> <a href="#" class="next-week">Next</a></p>
+		<div class="sidebar">
+			Sidebar woohoo
 		</div>
 	</div>
 
-	<div class="sidebar">
-		Sidebar woohoo
+
+
+
+<div class="cal-wrap">
+
+	<div class="head-cal">
+		<table class="calendar-head">
+			<tr class="cal-dates">			
+			</tr>
+			<!-- <tr class="allday" ><td>
+				<div>Testing</div>
+				<div>Testing</div>
+			</td>
+			<td>
+				Testing
+			</td>
+			<td>
+				Testing
+			</td>
+			<td>
+				Testing
+			</td>
+			<td>
+				Testing
+			</td>
+			<td>
+				Testing
+			</td>
+			<td>
+				Testing
+			</td>
+
+		</tr>  COMING SOON!-->
+		</table>
 	</div>
 
-</div>
-
-	<div class="cal-wrap">
-
-	<table class="times" style="margin-top:44px;">
+	<table class="times">
 		<tr>
 			<td>
 			</td>
@@ -26,8 +62,6 @@
 	</table>
 
 	<table class="calendar">
-		<tr class="cal-dates">			
-		</tr>
 		<tr class="calendar-body" >
 			<td>
 
@@ -55,7 +89,7 @@
 	</table>
 
 </div>	
-
+</div>
 </body>	
 
 {% endblock %}

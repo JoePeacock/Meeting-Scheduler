@@ -17,51 +17,7 @@ function put(data) {
 }
 
 $(document).ready(function() {
-	$("#appendedInputButton").keyup(function() {
-		put("q=" + $(this).val()).complete(function(xhr, textStatus) {
-			var res = JSON.parse(xhr.responseText);
-			console.log(res.length);
-			$('#results').empty();
-			if (res.length > 0) {
-				for (i =0; i < 5; i++) {
-					if (res[i] != null) {
-						$('#results').append('<li><a href="/addevent/' + res[i]['username'] + 
-							'" name="' + res[i]['username'] + '">' 
-						+ res[i]['name'] + '</a><br><span>' + res[i]['title'] + '</span></div></div></li>');
-
-					}
-				}	 
-			} else {
-				$('#results').append('<li><h5>No results were found for your search</h5></li>');
-			}
-	    });  
-	});		
-
-	var url = window.location.href;
-
-	$('.event-types li a').click(function() {
-		eventType= $(this).attr("name");
-		$(this).attr('href', url + "general?eventType=" + eventType);
-	});
-
-	$('#results li a').click(function(){
-		eventType;
-		name = $(this).attr("name");
-		console.log(name);
-		$(this).attr('href', url + name + "?eventType=" + eventType);
-		// Doesnt work
-	});
-
-	var page = window.location.href.match(/.*\?(.*)/)[1];
-	var splitArray = page.split('=');
-	$('.step2').append('<input type="hidden" name="' + splitArray[0] + '" value="' + splitArray[1] + '">');
-
-
-});
-
-/*$(document).ready(function(){
-
-	var times = [
+		var times = [
 		"8:00 am",
 		"8:30 am",
 		"9:00 am",
@@ -82,13 +38,11 @@ $(document).ready(function() {
 		"4:30 pm",
 		"5:00 pm",
 		"5:30 pm",
-		"6:00 pm",
+		"6:00 pm"
 	];
 
+	$('.datepicker').datepicker();
 
-	
-	$('.container #eventDate').datepicker();
-	
 
 	$('.timeinput').focus(function(){
 		$(this).autocomplete({
@@ -96,5 +50,53 @@ $(document).ready(function() {
 		});
 	});
 
+	$("#appendedInputButton").keyup(function() {
+		put("q=" + $(this).val()).complete(function(xhr, textStatus) {
+			var res = JSON.parse(xhr.responseText);
+			$('#results').empty();
+			if (res.length > 0) {
+				for (i =0; i < 5; i++) {
+					if (res[i] != null) {
+						var name = res[i]['name'];
+						console.log(name);
+						$('#results').append('<li><a  name="' + res[i]['username'] + '">' 
+						+ res[i]['name'] + '</a><br><span>' + res[i]['title'] + '</span></div></div></li>');
+						$('#results li a').click(function(){
+							var eventType;
+							username = $(this).attr("name");
+							$(this).attr('href', url + username + "?eventType=" + eventType + '&name=' + name);
+						});
+					}
+				}	 
+			} else {
+				$('#results').append('<li><h5>No results were found for your search</h5></li>');
+			}
+	    });  
 
-});*/
+
+	});		
+
+	var url = window.location.href;
+
+	$('.event-types li a').click(function() {
+		eventType= $(this).attr("name");
+		$(this).attr('href', url + "general?eventType=" + eventType);
+	});
+
+	var page = window.location.href.match(/.*\?(.*)/)[1];
+	var splitArray = page.split('=');
+	var again = splitArray[1].split('&');
+	splitArray[1] = again[0];
+	var eType = String(splitArray[1]).replace(/%20/g, " ");
+
+	if (splitArray[1] != "undefined") {
+		$('.topinfo').prepend('<h3>Creating event: ' + eType + '</h3>');
+	} else {
+		$('.topinfo').prepend('<h3>Creating event for: ' + splitArray[2].replace(/%20/g, " ") + '</h3>');
+
+	}
+	$('.step2').append('<input type="hidden" name="' + splitArray[0] + '" value="' + eType + '">');
+
+
+
+});
