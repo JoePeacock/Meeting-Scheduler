@@ -13,20 +13,20 @@ Page: base.html
 <head>
 	<title>Meeting Scheduler</title>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-	<link rel="stylesheet" href="../static/css/bootstrap.css">
-	<link rel="stylesheet" href="../static/css/bootstrap-responsive.css">
-	<link rel="stylesheet" href="../static/css/reset.css">
-	<link rel="stylesheet" href="../static/css/styles.css">	
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-responsive.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }} ">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }} ">	
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-	<script src="../static/js/events.js"></script>
-	<script src="../static/js/base.js"></script>
-	<script src="../static/js/calendar.js"></script>
+	<script src="{{ url_for('static', filename='js/events.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/base.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
 </head>
 
 <body>
 	<div class="header">
 		<div class="container">
-			<img src="../static/img/logo.png" width="350">
+			<img src="{{ url_for('static', filename='img/logo.png') }}" width="350">
 		</div>
 	</div>
 

@@ -124,19 +124,28 @@ def addEventUser(username):
 		return flask.render_template("404.html", error=error)
 	else:
 		if flask.request.method == 'POST':
+			eventType = None;
+			if flask.request.form['eventType'] == "undefined":
+				eventType = flask.request.form['eventType']
+				# Add to post and Add column to DB
 			title = flask.request.form['eventTitle']
 			desc = flask.request.form['eventDesc']
 			location = flask.request.form['eventLocation']
-			date = flask.request.form['eventDate'].replace("/", '')
+			dateStart = flask.request.form['eventDateStart'].replace("/", '')
+			dateEnd = flask.request.form['eventDateEnd'].replace("/", '')
 			start = flask.request.form['startTime'].replace(":", '').replace(" ", '')
 			end = flask.request.form['endTime'].replace(":", '').replace(" ", '')
-			startdaytime = datetime.datetime.strptime(date+start, "%m%d%Y%I%M%p")
-			enddaytime = datetime.datetime.strptime(date+end, "%m%d%Y%I%M%p")
+			startdaytime = datetime.datetime.strptime(dateStart+start, "%m%d%Y%I%M%p")
+			enddaytime = datetime.datetime.strptime(dateEnd+end, "%m%d%Y%I%M%p")
 			calid = values["id"]
 			addevent = g.db.execute('INSERT INTO events (name, location, description, start, end, calid) values (%s, %s, %s, %s, %s, %s)', title, location, desc, startdaytime, enddaytime, calid)
 			if addevent:
 				message = "Event added succesfully"
 		return flask.render_template("addevent2.html", message=message)
+
+@app.route('/addevent/complete/', methods=["GET", "POST"])
+def completeAddEvent():
+	return flask.render_template("complete.html");
 	
 
 # def addUser()

@@ -26,7 +26,7 @@ $(document).ready(function() {
 				for (i =0; i < 5; i++) {
 					if (res[i] != null) {
 						$('#results').append('<li><a href="/addevent/' + res[i]['username'] + 
-							'">' 
+							'" name="' + res[i]['username'] + '">' 
 						+ res[i]['name'] + '</a><br><span>' + res[i]['title'] + '</span></div></div></li>');
 
 					}
@@ -36,6 +36,27 @@ $(document).ready(function() {
 			}
 	    });  
 	});		
+
+	var url = window.location.href;
+
+	$('.event-types li a').click(function() {
+		eventType= $(this).attr("name");
+		$(this).attr('href', url + "general?eventType=" + eventType);
+	});
+
+	$('#results li a').click(function(){
+		eventType;
+		name = $(this).attr("name");
+		console.log(name);
+		$(this).attr('href', url + name + "?eventType=" + eventType);
+		// Doesnt work
+	});
+
+	var page = window.location.href.match(/.*\?(.*)/)[1];
+	var splitArray = page.split('=');
+	$('.step2').append('<input type="hidden" name="' + splitArray[0] + '" value="' + splitArray[1] + '">');
+
+
 });
 
 /*$(document).ready(function(){

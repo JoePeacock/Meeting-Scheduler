@@ -26,52 +26,58 @@
 				</div>
 			</div>
 
+		<div class="addeventForm">
 			<div class="row">
-				<div class="span12">
+				<div class="span11">
 					<p>Please fill out
 					the event information below. </p>
 				</div>
 			</div>
+			
+			<form method="POST">
+
 			<div class="row">
-				<div class="span12 step2">
-					<form>
-					<input type="text" name="eventname" placeholder="Untitled event"></br>
-					<div class="timeinput">
-					<input type="text" name="starttime" value="4/27/2013">
-					<input type="text" name="starttime" value="4:00 pm">
-					 to 
-					 <input type="text" name="endtime" value="5:00 pm">
-					 <input type="text" name="enddate" value="4/27/2013"></br>
-					 </div>
-					 <div class="row">
-						 <div class="span1 desc">
-
-							 <strong> Where: </strong> 
-						 </div>
-						 <div class="span11">
-							 <input type="text" name="location"></br>
-				 		</div>
-					</div>
-					<div class="row">
-						<div class="span1 desc">
-
-							<strong>Description:</strong>
-						       
-						
-						</div>
-						<div class="span11">
-							<textarea rows="4" name= "description" placeholder="Event description here.."></textarea></br>
-						</div>
-					 	</div>
-					</div>
-
-					<button class="btn btn-success">Next</button>
-
+				<div class="span11 saveButton">
+					<a href="/addevent"><button class="btn">Back</button></a>
+					<input type="submit" class="btn btn-warning" value="SAVE">
+					<a href="/"><button class="btn">Discard</button></a>
 				</div>
 			</div>
+
+			<div class="row">
+				<div class="span10 step2">
+					<input type="text" id="eventTitle-form" name="eventTitle" placeholder="Untitled event">
+					<div class="timeinput">
+						<input type="text" name="eventDateStart" value="4/27/2013">
+						<input type="text" name="startTime" value="4:00 pm">
+						 to 
+						 <input type="text" name="endTime" value="5:00 pm">
+						 <input type="text" name="eventDateEnd" value="4/27/2013">
+						 <div class="checkbox-repeat">
+						 	<input type="checkbox"><span>All Day</span> <input type="checkbox"><span>Repeat..</span>
+						 </div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				 <div class="span11">
+					 <strong class="label where"> Location: </strong> <input type="text" name="eventLocation" class="addFormBox" placeholder="Location">
+		 		</div>
+			</div>
+
+			<div class="row">
+				<div class="span11">
+
+					<strong class="label">Description:</strong> <textarea rows="4" name= "eventDesc" class="addFormBox" placeholder="Event description here.."></textarea>
+				</div>
+			</div>
+
+			</form>	
+		</div>
+
 		</div>
 	</div>
-
 </div>
 
 {% endblock %}
