@@ -23,6 +23,11 @@ $(document).ready(function() {
 
 	$('.datepicker').datepicker();
 
+	$('#eventDateStart').blur(function(){
+		value = $('#eventDateStart').attr('value');
+		$('#eventDateEnd').removeAttr('value');
+		$('#eventDateEnd').attr('value', value);
+	});
 
 	$('.timeinput').focus(function(){
 		$(this).autocomplete({

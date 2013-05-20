@@ -42,6 +42,10 @@ function eventFormat(eventsarray) {
 	this.date;
 }
 
+eventFormat.prototype.name = function(i) {
+	return this.json[i]['name'];
+}
+
 eventFormat.prototype.size = function() {
 	return this.json.length;
 };
@@ -71,12 +75,9 @@ eventFormat.prototype.endTime = function(i) {
 	return formatTime(etime);
 };
 
-eventFormat.prototype.getXPos = function(day) {
-	diff = Math.ceil(Math.abs((7 - (Math.abs(this.date[2] - day)))));
-	if (diff > 6) {
-		diff = diff-16;
-	}
-	return diff;
+eventFormat.prototype.getXPos = function(i) {
+	var xday = this.json[i]['start'].split('T')[0].split('-')[2];
+	return xday;
 };
 
 eventFormat.prototype.getYPos = function() {

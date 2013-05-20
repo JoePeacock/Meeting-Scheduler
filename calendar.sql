@@ -21,17 +21,9 @@ CREATE TABLE IF NOT EXISTS events (
 	id SERIAL,
 	name VARCHAR(255),
 	location VARCHAR(255),
+	series, VARCHAR(255),
 	description TEXT,
 	start TIMESTAMP,
 	end TIMESTAMP,
 	calid INT(8)
-);
-
-
-CREATE TABLE IF NOT EXISTS posts (
-	id SERIAL,
-	name VARCHAR(255),
-	song TEXT,
-	url VARCHAR(255),
-	date TIMESTAMP,
 );

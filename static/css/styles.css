@@ -16,7 +16,7 @@ body {
 .header {
 	width: 100%;
 	background-color: #041A9B;
-	z-index: 1;
+	z-index: 6;
 	position: fixed;
 	height: 50px;
 }
@@ -125,15 +125,8 @@ p {
 	padding: 8px 0 8px 0;
 }
 
-.sidebar {
-	width: 145px;
-	float: left;
-	position: fixed;
-	margin-top: 100px;
-}
-
 .cal-wrap {
-	margin-left: 145px;
+	margin-left: 15px;
 	z-index: 0;
 	background-color: #FFF;
 	padding-top: 89px;
@@ -192,7 +185,7 @@ p {
 .calendar-head {
 	position: fixed;
 	background-color: #FFF;
-	z-index: 1;
+	z-index: 6;
 	width: 100%;
 	height: 38px;
 	margin-left: 62px;
@@ -202,7 +195,7 @@ p {
 	width: 100%;
 	height: 38px;
 	background-color: #FFF;
-	z-index: 1;
+	z-index: 6;
 	position: fixed;
 	border-bottom: 1px solid #ddd;
 }

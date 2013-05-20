@@ -229,7 +229,8 @@ def getCal():
 	if jsonDate['user'] == 'none' or jsonDate['user'] == '':
 		events = g.db.query('SELECT * FROM events WHERE calid = %s AND start = %s OR end = %s OR start between %s AND %s ORDER BY start DESC', 0, start, end, start, end)	
 	else: 
-		username = jsonDate['user']
+		username = jsonDate['user'].split('?')[0]	
+		print username
 		calid = str(g.db.get('SELECT id from users where username = %s', username)['id'])
 		events = g.db.query('SELECT * FROM events WHERE calid = %s ORDER BY start DESC', calid)
 		# AND start = %s OR end = %s OR start between %s and  %s ORDER BY start DESC', calid, start, end, start, end

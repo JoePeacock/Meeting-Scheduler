@@ -8,7 +8,12 @@ Page: base.js
 
 */
 
-var times =  new Array("7:00 am", "7:30 am", "8:00 am", "9:00 am", "10:00 am",  "11:00 am",  "12:00 pm", "1:00 pm",  "2:00 pm", "3:00 pm",  "4:00 pm",  "5:00 pm",  "6:00 pm", "6:30 pm", "7:00 pm", "7:30 pm", "8:00 pm");
+var times =  new Array(
+				"12:00am", "12:30am", "1:00am", "1:30am", "2:00am", "2:30am", "3:00am", "4:00am", 
+				"5:00am", "5:30am", "6:00am", "6:30am", "7:00 am", "7:30 am", "8:00 am", "9:00 am", 
+				"10:00 am",  "11:00 am",  "12:00 pm", "1:00 pm",  "2:00 pm", "3:00 pm",  "4:00 pm",  
+				"5:00 pm",  "6:00 pm", "6:30 pm", "7:00 pm", "7:30 pm", "8:00 pm", "8:30pm", "9:00pm", "9:30pm", "10:00pm", "10:30pm", "11:00pm", "11:30pm"
+			);
 var weekDay = new Array("Sun", "Mon", "Tue", "Wed", "Thurs", "Fri", "Sat");
 var monthName = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
 var date = new Date();
@@ -41,6 +46,27 @@ function postDates(weekofEvents) {
 	});	
 }
 
+function getEventVars(response, dates) {
+	var eventsSet = [];
+	var eventsObj = new eventFormat(response);
+	for (i=0; i < eventsObj.size(); i++) {
+		eventsObj.sDateTime(i); // IMPORTANT: Set for relative date format from server
+		eventsObj.eDateTime(i); // IMPORTANT: Set for relative date format from server
+		var item = {
+			name: eventsObj.name(i),
+			stime: eventsObj.startTime(i),
+			etime: eventsObj.endTime(i),
+			sdate: eventsObj.date,
+			eventLength: eventsObj.eventLength(i),
+			yPos: eventsObj.getYPos(),
+			xPos: eventsObj.getXPos(i) 
+		};
+
+		 eventsSet.push(item);
+	}
+	return eventsSet;
+}
+
 $(document).ready(function(){
 	var diff = date.getDay();
 	var ul = $('.cal-nav');
@@ -49,7 +75,7 @@ $(document).ready(function(){
 	var neg = 0;
 	var index = 0;
 	var weekofEvents = new Array()
-	var calendarWidth = screen.width-145;
+	var calendarWidth = screen.width-15;
 	var dayWidth = Math.floor(($('.cal-wrap').width()-62)/7);
 
 	$('.calendar-head .allday td').css("width", dayWidth + 'px');
@@ -62,37 +88,34 @@ $(document).ready(function(){
 		var dates = new Date(date.getFullYear(), date.getMonth(), date.getDate()-diff);		
 		var datesjson = JSON.stringify({ day: dates.getDate()  , month: (dates.getMonth()+1), year: dates.getFullYear() });
 		weekofEvents.push(datesjson);
-		$(".cal-dates").append('<td id="' + dates.getDate() + '">' + weekDay[dates.getDay()] + ' ' +  (dates.getDate()) + ' ' + monthName[dates.getMonth()] + '');
+		$(".cal-dates").append('<td>' + weekDay[dates.getDay()] + ' ' +  (dates.getDate()) + ' ' + monthName[dates.getMonth()] + '');
 		$('.calendar-head .cal-dates td').css("width", dayWidth + 'px');
+		$('.calendar-body td:nth-child(' + i+1 + ')').attr('id', dates.getDate());
 		diff--;		
 	}
 
 	var startDay = JSON.parse(weekofEvents[0]);
 	$('.current-week').append(startDay['day'] + " of " + monthName[startDay['month']-1] + ", " + startDay['year']);
 	var currentTD = Math.ceil(Math.abs((date - dates)/(1000*60*60*24)));
-
-	var currentTimePx = (((date.getHours()-6)*50) + (date.getMinutes()/parseFloat(60)*50));
+	var Hours = date.getHours()*75;
+	var minutes = (date.getMinutes()/parseFloat(60))*50; 
+	console.log(Hours);
+	console.log(minutes);
+	console.log(Hours + minutes);
+	var currentTimePx = Hours + minutes;
 	var today = $('.calendar-body td:nth-child(' + (7-currentTD) + ')');	
 	today.css('background-color', '#efefef'); 
-	today.append('<div id="current-time" style="top:'+ currentTimePx + 'px; "></hr>')
+	today.append('<div id="current-time" style="top:'+ currentTimePx + 'px; "></hr>');
 
 	postDates(weekofEvents).complete(function(xhr, textStatus) {  
-		var eventsObj = new eventFormat(xhr.responseText);
-		console.log(eventsObj);
-		for (i=0; i < eventsObj.size(); i++) {
-			eventsObj.sDateTime(i);
-			eventsObj.eDateTime(i);
-			var stime = eventsObj.startTime(i);
-			var etime = eventsObj.endTime(i);
-			var sdate = eventsObj.date;
-			var eventLength = eventsObj.eventLength(i);
-			var yPos = eventsObj.getYPos();
-			var xPos = eventsObj.getXPos(dates.getDate()-i);
-			console.log(xPos);
-			if (currentTimePx > yPos && date.getDate() == sdate) {d
-				$('.calendar-body td:nth-child(' + (xPos) + ')').append('<div class="cal-event" style="top:' + yPos + 'px; height:'+ eventLength + 'px; background-color:#ccc; border-color:#aaa"><p>' + stime + ' - ' + etime + '<br><span>' + json[i]['name']+'</span><!--<a href="/deletevent/' + json[i]['id'] + '">Delete</a> --></p></div>');
+		var eventsObj = getEventVars(xhr.responseText, dates.getDate());
+		for (i=0; i < eventsObj.length; i++) {
+			var yPos  = eventsObj[i]['yPos'];
+			var sdate  = eventsObj[i]['sdate'];
+			if (currentTimePx > yPos && date.getDate() == sdate) {
+				$('#' + (eventsObj[i]['xPos'])).append('<div class="cal-event" style="top:' + eventsObj[i]['yPos'] + 'px; height:'+ eventsObj[i]['eventLength'] + 'px; background-color:#ccc; border-color:#aaa"><p>' + eventsObj[i]['stime'] + ' - ' + eventsObj[i]['etime'] + '<br><span>' + json[i]['name']+'</span><!--<a href="/deletevent/' + json[i]['id'] + '">Delete</a> --></p></div>');
 			} else {
-			$('.calendar-body td:nth-child(' + (xPos) + ')').append('<div class="cal-event" style="top:' + yPos + 'px; height:'+ eventLength + 'px"><p>' + stime + ' - ' + etime + '<br><span>' + eventsObj.Name(i) +'</span><!--<a href="/deletevent/' + eventsObj.id(i) + '">Delete</a> --></p></div>');
+			$('#' + (eventsObj[i]['xPos'])).append('<div class="cal-event" style="top:' + eventsObj[i]['yPos'] + 'px; height:'+ eventsObj[i]['eventLength'] + 'px"><p>' + eventsObj[i]['stime'] + ' - ' + eventsObj[i]['etime'] + '<br><span>' + eventsObj[i]['name'] +'</span><!--<a href="/deletevent/' + eventsObj[i] + '">Delete</a> --></p></div>');
 			}
 		}
 	});
@@ -150,6 +173,7 @@ $(document).ready(function(){
 		}
 
 		postDates(weekofEvents).complete(function(xhr, textStatus) {  
+
 		var eventsObj = new eventFormat(xhr.responseText);
 			for (i=0; i < eventsObj.size(); i++) {
 				eventsObj.sDateTime(i);
@@ -203,7 +227,7 @@ $(document).ready(function(){
 
 			} else {
 				$('.cal-dates td:nth-child(' + i + ')').replaceWith('<td>' + (dates.getDate()) + ' ' + weekDay[dates.getDay()] + ' ' + monthName[dates.getMonth()] + '</td>');
-								$('.calendar-head .cal-dates td').css("width", dayWidth + 'px');
+				$('.calendar-head .cal-dates td').css("width", dayWidth + 'px');
 
 			}
 		}
