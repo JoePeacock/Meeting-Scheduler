@@ -67,6 +67,10 @@ function getEventVars(response, dates) {
 	return eventsSet;
 }
 
+function scrolls(x, y) {
+	window.scroll(x, y);
+}
+
 $(document).ready(function(){
 	var diff = date.getDay();
 	var ul = $('.cal-nav');
@@ -78,9 +82,8 @@ $(document).ready(function(){
 	var calendarWidth = screen.width-15;
 	var dayWidth = Math.floor(($('.cal-wrap').width()-62)/7);
 
-	$(function () {
-			window.scrollTo(0, 400);
-	});
+	scrolls(0, 500);
+
 	$('.calendar-head .allday td').css("width", dayWidth + 'px');
 	$('.cal-wrap').css('width', calendarWidth + "px");
 	$('.calendar td').css('width', dayWidth + "px");
@@ -93,7 +96,6 @@ $(document).ready(function(){
 		weekofEvents.push(datesjson);
 		$(".cal-dates").append('<td name="' + dates.getDate() + '">' + weekDay[dates.getDay()] + ' ' +  (dates.getDate()) + ' ' + monthName[dates.getMonth()] + '');
 		$('.calendar-head .cal-dates td').css("width", dayWidth + 'px');
-		console.log("Hello");
 		$('.calendar-body td:nth-child(' + (i+1) + ')').attr('id', dates.getDate());
 		diff--;		
 	}
@@ -104,10 +106,6 @@ $(document).ready(function(){
 	var Hours = date.getHours()*50;
 	var minutes = (date.getMinutes()/parseFloat(60))*50; 
 
-	console.log(Hours);
-	console.log(minutes);
-	console.log(Hours + minutes);
-
 	var currentTimePx = Hours + minutes;
 	var today = $('.calendar-body td:nth-child(' + (7-currentTD) + ')');	
 	today.css('background-color', '#efefef'); 
@@ -117,7 +115,6 @@ $(document).ready(function(){
 	postDates(weekofEvents).complete(function(xhr, textStatus) {  
 		var eventsObj = getEventVars(xhr.responseText, dates.getDate());
 		for (i=0; i < eventsObj.length; i++) {
-			console.log(eventsObj[i]['xPos']);
 			var yPos  = eventsObj[i]['yPos'];
 			var sdate  = eventsObj[i]['sdate'];
 			if (currentTimePx > yPos && date.getDate() == sdate) {
@@ -135,12 +132,15 @@ $(document).ready(function(){
 		}
 	});
 
-
 	for (i = 0; i < times.length; i++){
 		$('.times tr td').append("<div>" + times[i] + "</div>");
+		$('.time tr td div:nth-child(7)').attr('id', 'scroll');
 	}
 
-		$(".prev-week").click(function(){
+	$('.cal-event').click(function(){ console.log('Hello') });
+
+	$(".prev-week").click(function() {
+
 		$('.calendar-body td:nth-child(' + (7-currentTD) + ')').css('background-color', '#FFF');
 		$('.calendar-body td:nth-child(' + (7-currentTD) + ') #current-time').remove();
 
@@ -175,32 +175,29 @@ $(document).ready(function(){
 			}
 		}
 
-		postDates(weekofEvents).complete(function(xhr, textStatus) {  
+		var startDay = JSON.parse(weekofEvents[0]);
+		$('.current-week').empty();
+		$('.current-week').append(startDay['day'] + " of " + monthName[startDay['month']-1] + ", " + startDay['year']);
 
-		var eventsObj = new eventFormat(xhr.responseText);
-			for (i=0; i < eventsObj.size(); i++) {
-				eventsObj.sDateTime(i);
-				eventsObj.eDateTime(i);
-				var stime = eventsObj.startTime(i);
-				var etime = eventsObj.endTime(i);
-				var sdate = eventsObj.date;
-				var eventLength = eventsObj.eventLength(i);
-				var yPos = eventsObj.getYPos();
-				var xPos = eventsObj.getXPos(dates.getDate()-i);
-				
+		postDates(weekofEvents).complete(function(xhr, textStatus) {  
+			var eventsObj = getEventVars(xhr.responseText, dates.getDate());
+			for (i=0; i < eventsObj.length; i++) {
+				var yPos  = eventsObj[i]['yPos'];
+				var sdate  = eventsObj[i]['sdate'];
 				if (currentTimePx > yPos && date.getDate() == sdate) {
-					$('.calendar-body td:nth-child(' + (xPos) + ')').append('<div class="cal-event" style="top:' + yPos + 'px; height:'+ eventLength + 'px; background-color:#ccc; border-color:#aaa"><p>' + stime + ' - ' + etime + '<br><strong>' + json[i]['name']+'</strong><!--<a href="/deletevent/' + json[i]['id'] + '">Delete</a> --></p></div>');
+					$('#' + (eventsObj[i]['xPos'])).append('<div class="cal-event" style="top:' + eventsObj[i]['yPos'] + 'px; height:'+ (eventsObj[i]['eventLength']-2)+ 'px; background-color:#ccc; border-color:#aaa"><p>' + eventsObj[i]['stime'] + ' - ' + eventsObj[i]['etime'] + '<br><span>' + json[i]['name']+'</span><!--<a href="/deletevent/' + json[i]['id'] + '">Delete</a> --></p></div>');
 				} else {
-					$('.calendar-body td:nth-child(' + (xPos) + ')').append('<div class="cal-event" style="top:' + yPos + 'px; height:'+ eventLength + 'px"><p>' + stime + ' - ' + etime + '<br><strong>' + eventsObj.Name(i) +'</strong><!--<a href="/deletevent/' + eventsObj.id(i) + '">Delete</a> --></p></div>');
+					$('#' + (eventsObj[i]['xPos'])).append('<div class="cal-event" style="top:' + eventsObj[i]['yPos'] + 'px; height:'+ (eventsObj[i]['eventLength']-2) + 'px"><p>' + eventsObj[i]['stime'] + ' - ' + eventsObj[i]['etime'] + '<br><span>' + eventsObj[i]['name'] +'</span><!--<a href="/deletevent/' + eventsObj[i] + '">Delete</a> --></p></div>');
 				}
 			}
 		});
-		$(".cal-dates td").click(function(){
-			$(".cal-dates td").removeClass("cal-nav-select");
-			$(this).toggleClass("cal-nav-select");
-		});
-			
-		});
+
+		$('.cal-dates td').each(function(){
+			if ($(this).attr('name') == date.getDate()) {
+				$(this).addClass('cal-nav-select');
+			}
+		});		
+	});
 
 	$(".next-week").click(function(){
 		$('.calendar-body td:nth-child(' + (7-currentTD) + ')').css('background-color', '#FFF');
@@ -234,33 +231,28 @@ $(document).ready(function(){
 
 			}
 		}
-		console.log(weekofEvents);
-		postDates(weekofEvents).complete(function(xhr, textStatus) {  
-			var eventsObj = new eventFormat(xhr.responseText);
-			for (i=0; i < eventsObj.size(); i++) {
-				eventsObj.sDateTime(i);
-				eventsObj.eDateTime(i);
-				var stime = eventsObj.startTime(i);
-				var etime = eventsObj.endTime(i);
-				var sdate = eventsObj.date;
-				var eventLength = eventsObj.eventLength(i);
-				var yPos = eventsObj.getYPos();
-				var xPos = eventsObj.getXPos(dates.getDate()-i);
-				
-				if (currentTimePx > yPos && date.getDate() == sdate) {
-					$('.calendar-body td:nth-child(' + (xPos) + ')').append('<div class="cal-event" style="top:' + yPos + 'px; height:'+ eventLength + 'px; background-color:#ccc; border-color:#aaa"><p>' + stime + ' - ' + etime + '<br><strong>' + json[i]['name']+'</strong><!--<a href="/deletevent/' + json[i]['id'] + '">Delete</a> --></p></div>');
-					$('.calendar-head .cal-dates td').css("width", dayWidth + 'px');
+		
+		var startDay = JSON.parse(weekofEvents[0]);
+		$('.current-week').empty();
+		$('.current-week').append(startDay['day'] + " of " + monthName[startDay['month']-1] + ", " + startDay['year']);
 
+		postDates(weekofEvents).complete(function(xhr, textStatus) {  
+			var eventsObj = getEventVars(xhr.responseText, dates.getDate());
+			for (i=0; i < eventsObj.length; i++) {
+				var yPos  = eventsObj[i]['yPos'];
+				var sdate  = eventsObj[i]['sdate'];
+				if (currentTimePx > yPos && date.getDate() == sdate) {
+					$('#' + (eventsObj[i]['xPos'])).append('<div class="cal-event" style="top:' + eventsObj[i]['yPos'] + 'px; height:'+ (eventsObj[i]['eventLength']-2)+ 'px; background-color:#ccc; border-color:#aaa"><p>' + eventsObj[i]['stime'] + ' - ' + eventsObj[i]['etime'] + '<br><span>' + json[i]['name']+'</span><!--<a href="/deletevent/' + json[i]['id'] + '">Delete</a> --></p></div>');
 				} else {
-					$('.calendar-body td:nth-child(' + (xPos) + ')').append('<div class="cal-event" style="top:' + yPos + 'px; height:'+ eventLength + 'px"><p>' + stime + ' - ' + etime + '<br><strong>' + eventsObj.Name(i) +'</strong><!--<a href="/deletevent/' + eventsObj.id(i) + '">Delete</a> --></p></div>');
-					$('.calendar-head .cal-dates td').css("width", dayWidth + 'px');
+					$('#' + (eventsObj[i]['xPos'])).append('<div class="cal-event" style="top:' + eventsObj[i]['yPos'] + 'px; height:'+ (eventsObj[i]['eventLength']-2) + 'px"><p>' + eventsObj[i]['stime'] + ' - ' + eventsObj[i]['etime'] + '<br><span>' + eventsObj[i]['name'] +'</span><!--<a href="/deletevent/' + eventsObj[i] + '">Delete</a> --></p></div>');
 				}
 			}
 		});
-		$(".cal-dates td").click(function(){
-			$(".cal-dates td").removeClass("cal-nav-select");
-			$(this).toggleClass("cal-nav-select");
-		});
 
+		$('.cal-dates td').each(function(){
+			if ($(this).attr('name') == date.getDate()) {
+				$(this).addClass('cal-nav-select');
+			}
+		});
 	});
 });

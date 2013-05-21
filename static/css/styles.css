@@ -133,7 +133,6 @@ p {
 }
 
 .calendar {
-	overflow-y: hidden;
 	margin-top: 38px;
 }
 
@@ -254,6 +253,11 @@ p {
 	font-weight: normal;
 	text-transform: uppercase;
 }
+
+.prev-week, .next-week {
+	cursor: pointer;
+}
+
 /* ------------------------------- */
 /*  Page Styling                   */
 /* ------------------------------- */
