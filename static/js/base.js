@@ -107,7 +107,7 @@ $(document).ready(function(){
 
 	var currentTimePx = Hours + minutes;
 	var today = $('.calendar-body td:nth-child(' + (7-currentTD) + ')');	
-	today.css('background-color', '#efefef'); 
+	today.css('background-color', 'rgba(0,0,0,0.1)'); 
 	today.append('<div id="current-time" style="top:'+ currentTimePx + 'px; "></hr>');
 
 	postDates(weekofEvents).complete(function(xhr, textStatus) {  
