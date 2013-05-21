@@ -230,13 +230,13 @@ def getCal():
 		events = g.db.query('SELECT * FROM events WHERE calid = %s AND start = %s OR end = %s OR start between %s AND %s ORDER BY start DESC', 0, start, end, start, end)	
 	else: 
 		username = jsonDate['user'].split('?')[0]	
-		print username
 		calid = str(g.db.get('SELECT id from users where username = %s', username)['id'])
 		events = g.db.query('SELECT * FROM events WHERE calid = %s ORDER BY start DESC', calid)
 		# AND start = %s OR end = %s OR start between %s and  %s ORDER BY start DESC', calid, start, end, start, end
 	for eventItem in events:
 		if (eventItem['start'] >= start and eventItem['start'] <= end):
 			eventsArray.append(eventItem)
+	print eventsArray
 	dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 	return json.dumps(eventsArray, default=dthandler)
 

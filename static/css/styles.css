@@ -162,6 +162,8 @@ p {
 
 
 .calendar-body td{
+	background: url('../img/calbg.png');
+	background-repeat:repeat;
 	height: 1000px;
 	position: relative;
 	border: 1px solid #eee;

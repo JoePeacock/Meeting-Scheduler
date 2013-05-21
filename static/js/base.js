@@ -8,11 +8,11 @@ Page: base.js
 
 */
 
-var times =  new Array(
-				"12:00am", "12:30am", "1:00am", "1:30am", "2:00am", "2:30am", "3:00am", "4:00am", 
-				"5:00am", "5:30am", "6:00am", "6:30am", "7:00 am", "7:30 am", "8:00 am", "9:00 am", 
+var times =  new Array (
+				"12:00am", "1:00am", "2:00am", "3:00am", "4:00am", 
+				"5:00am", "6:00am", "7:00 am", "8:00 am", "9:00 am", 
 				"10:00 am",  "11:00 am",  "12:00 pm", "1:00 pm",  "2:00 pm", "3:00 pm",  "4:00 pm",  
-				"5:00 pm",  "6:00 pm", "6:30 pm", "7:00 pm", "7:30 pm", "8:00 pm", "8:30pm", "9:00pm", "9:30pm", "10:00pm", "10:30pm", "11:00pm", "11:30pm"
+				"5:00 pm",  "6:00 pm", "7:00 pm", "8:00 pm", "9:00pm", "10:00pm", "11:00pm"
 			);
 var weekDay = new Array("Sun", "Mon", "Tue", "Wed", "Thurs", "Fri", "Sat");
 var monthName = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
@@ -90,18 +90,21 @@ $(document).ready(function(){
 		weekofEvents.push(datesjson);
 		$(".cal-dates").append('<td>' + weekDay[dates.getDay()] + ' ' +  (dates.getDate()) + ' ' + monthName[dates.getMonth()] + '');
 		$('.calendar-head .cal-dates td').css("width", dayWidth + 'px');
-		$('.calendar-body td:nth-child(' + i+1 + ')').attr('id', dates.getDate());
+		console.log("Hello");
+		$('.calendar-body td:nth-child(' + (i+1) + ')').attr('id', dates.getDate());
 		diff--;		
 	}
 
 	var startDay = JSON.parse(weekofEvents[0]);
 	$('.current-week').append(startDay['day'] + " of " + monthName[startDay['month']-1] + ", " + startDay['year']);
 	var currentTD = Math.ceil(Math.abs((date - dates)/(1000*60*60*24)));
-	var Hours = date.getHours()*75;
+	var Hours = date.getHours()*50;
 	var minutes = (date.getMinutes()/parseFloat(60))*50; 
+
 	console.log(Hours);
 	console.log(minutes);
 	console.log(Hours + minutes);
+
 	var currentTimePx = Hours + minutes;
 	var today = $('.calendar-body td:nth-child(' + (7-currentTD) + ')');	
 	today.css('background-color', '#efefef'); 
@@ -110,6 +113,7 @@ $(document).ready(function(){
 	postDates(weekofEvents).complete(function(xhr, textStatus) {  
 		var eventsObj = getEventVars(xhr.responseText, dates.getDate());
 		for (i=0; i < eventsObj.length; i++) {
+			console.log(eventsObj[i]['xPos']);
 			var yPos  = eventsObj[i]['yPos'];
 			var sdate  = eventsObj[i]['sdate'];
 			if (currentTimePx > yPos && date.getDate() == sdate) {
