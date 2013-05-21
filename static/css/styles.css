@@ -150,7 +150,8 @@ p {
 
 .times td div{
 	border: 1px solid #eee;
-	height: 48px;
+	height: 49px;
+	border-top:none;
 	font-size: .75em;
 	width: 60px;
 	text-align: right;
