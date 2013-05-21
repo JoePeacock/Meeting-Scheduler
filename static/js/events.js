@@ -81,7 +81,7 @@ eventFormat.prototype.getXPos = function(i) {
 };
 
 eventFormat.prototype.getYPos = function() {
-	return ((this.stime[1]/parseFloat(60))*50) + ((this.stime[0]-6)*50);
+	return ((this.stime[1]/parseFloat(60))*50) + ((this.stime[0])*50);
 };
 
 eventFormat.prototype.eventLength = function(i) {
