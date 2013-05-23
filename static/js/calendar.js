@@ -53,6 +53,7 @@ $(document).ready(function() {
 
 	});
 
+	$('#eventDateStart').attr('value', date.getDate());
 
 	$("#appendedInputButton").keyup(function() {
 		put("q=" + $(this).val()).complete(function(xhr, textStatus) {
