@@ -38,8 +38,10 @@ $(document).ready(function() {
 	put("q=").complete(function(xhr, textStatus) {
 		var res = JSON.parse(xhr.responseText);
 		for(i=0; i < 5; i++) {
-			$('#resultshome').append('<li><a href="/calendar/' + res[i]['username'] + 
-			'">' + res[i]['name'] + '</a><br><span>' + res[i]['title'] + '</span></div></div></li>');
+			if (res[i]['username']) {
+				$('#resultshome').append('<li><a href="/calendar/' + res[i]['username'] + 
+				'">' + res[i]['name'] + '</a><br><span>' + res[i]['title'] + '</span></div></div></li>');
+			}
 		}
 		if (res.length < 5) {
 			$('#displayedResults').append(res.length);
@@ -96,12 +98,13 @@ $(document).ready(function() {
 		eventType= $(this).attr("name");
 		$(this).attr('href', url + "general?eventType=" + eventType);
 	});
-
-	var page = window.location.href.match(/.*\?(.*)/)[1];
-	var splitArray = page.split('=');
-	var again = splitArray[1].split('&');
-	splitArray[1] = again[0];
-	var eType = String(splitArray[1]).replace(/%20/g, " ");
+	if (window.location.href.match(/.*\?(.*)/)[1] != null) {
+		var page = window.location.href.match(/.*\?(.*)/)[1];
+		var splitArray = page.split('=');
+		var again = splitArray[1].split('&');
+		splitArray[1] = again[0];
+		var eType = String(splitArray[1]).replace(/%20/g, " ");
+	}
 
 	if (splitArray[1] != "undefined") {
 		$('.topinfo').prepend('<h3>Creating event: ' + eType + '</h3>');

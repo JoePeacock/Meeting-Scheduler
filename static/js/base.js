@@ -89,6 +89,10 @@ $(document).ready(function(){
 	$('.calendar td').css('width', dayWidth + "px");
 	$('.calendar-body td').css('height', times.length*50 + 'px');
 
+	for (i = 0; i < times.length; i++) {
+		$('.times tr td').append("<div>" + times[i] + "</div>");
+	}
+
 	weekofEvents = [];
 	for(i = 0; i < 7; i++) {
 		var dates = new Date(date.getFullYear(), date.getMonth(), date.getDate()-diff);		
@@ -131,11 +135,6 @@ $(document).ready(function(){
 			$(this).addClass('cal-nav-select');
 		}
 	});
-
-	for (i = 0; i < times.length; i++){
-		$('.times tr td').append("<div>" + times[i] + "</div>");
-		$('.time tr td div:nth-child(7)').attr('id', 'scroll');
-	}
 
 	$('.cal-event').click(function(){ console.log('Hello') });
 
