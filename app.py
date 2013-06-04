@@ -85,8 +85,7 @@ def calendarFilter():
 	# events = g.db.query('SELECT * FROM events INNER JOIN users ON events.calid = users.id')
 	genEvents = g.db.query('SELECT * FROM events WHERE calid = 0');
 	events.append(genEvents);
-	print events
-	return flask.render_template('viewcalendar.html', events = events)
+	return flask.render_template('viewcalendar.html', events = events, name = "General")
 
 
 # def viewCalendar()
@@ -102,14 +101,9 @@ def viewCalendar(username):
 		return flask.render_template("404.html", error=error)
 	else:
 		events = g.db.query('SELECT * FROM events WHERE calid = %s', str(values['id']))
+	print values
 	return flask.render_template('viewcalendar.html', events = events, name = values['name'])
 
-
-# ----------------------------------------------
-# ----------------------------------------------
-# ADDD CHECK FOR STARTIME BEING LATER THAN ENDTIME
-# ----------------------------------------------
-# ----------------------------------------------
 
 # def addEvent()
 # Loads "addevent.html"
@@ -156,7 +150,10 @@ def addEventUser(username):
 		desc = flask.request.form['eventDesc']
 		location = flask.request.form['eventLocation']
 		dateStart = flask.request.form['eventDateStart'].replace("/", '')
-		dateEnd = flask.request.form['eventDateEnd'].replace("/", '')
+		# Sets the start date and end date to the same day.
+		dateEnd = dateStart;
+		# Temporarily until multi day feature
+		# dateEnd = flask.request.form['eventDateStart'].replace("/", '')
 		start = flask.request.form['startTime'].replace(":", '').replace(" ", '')
 		end = flask.request.form['endTime'].replace(":", '').replace(" ", '')
 		startdaytime = datetime.datetime.strptime(dateStart+start, "%m%d%Y%I%M%p")
@@ -236,7 +233,6 @@ def getCal():
 	for eventItem in events:
 		if (eventItem['start'] >= start and eventItem['start'] <= end):
 			eventsArray.append(eventItem)
-	print eventsArray
 	dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 	return json.dumps(eventsArray, default=dthandler)
 
