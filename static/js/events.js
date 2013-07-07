@@ -85,7 +85,7 @@ eventFormat.prototype.getYPos = function() {
 };
 
 eventFormat.prototype.eventLength = function(i) {
-	return ((this.etime[0] - this.stime[0])*50) + ((((this.etime[1]/parseFloat(60)) - ((this.stime[1]/parseFloat(60))))*50));
+	return ((this.etime[0] - this.stime[0])*50) + ((((this.etime[1]/parseFloat(60)) - ((this.stime[1]/parseFloat(60))))*50))
 };
 
 eventFormat.prototype.Name = function(i) {

@@ -9,6 +9,7 @@ Contact: japeacoc@buffalo.edu
 Page: calendar.sql
 
 */
+
 CREATE TABLE IF NOT EXISTS users (
 	id SERIAL,
 	name VARCHAR(255),

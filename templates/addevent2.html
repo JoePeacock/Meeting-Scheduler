@@ -45,7 +45,7 @@
 				<div class="span10 step2">
 					<input type="text" id="eventTitle-form" name="eventTitle" placeholder="Untitled event">
 					<div class="timeinput">
-						<input type="text" name="eventDateStart" id="eventDateStart" class="datepicker" value="4/27/2013">
+						<input type="text" name="eventDateStart" id="eventDateStart" class="datepicker" value="">
 						<input type="text" class="timeinput" name="startTime" value="4:00 pm">
 						 to 
 						 <input type="text" class="timeinput" name="endTime" value="5:00 pm">
@@ -77,6 +77,9 @@
 		</div>
 	</div>
 </div>
+
+<!-- Le JS -->
+	<script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
 
 {% endblock %}
 

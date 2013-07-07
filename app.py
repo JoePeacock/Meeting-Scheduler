@@ -76,6 +76,7 @@ def calManage():
 	userList = g.db.iter('select * from users')
 	return flask.render_template('setting.html', userList = userList, error=error, output=output)
 
+
 # def calendarFilter()
 # Renders "calendarview.html"
 # Function: Displays the general Calendar for all calid 
@@ -126,13 +127,15 @@ def addEvent():
 			message = "Event added succesfully"
 	return flask.render_template("addevent.html", message=message)
 
+
 # def addEventUser()
 # Loads "addevent.html"
 # <username> is the string all lowercase no spaces. If not found returns 404.
 # Function: Add's an event to a users calendar specified in the URL
 @app.route('/addevent/<username>', methods=["GET", "POST"])
 def addEventUser(username):
-	message = None;
+	message = None
+	error = None
 	if (username == "general"):
 		calid = 0
 	else:
@@ -161,7 +164,11 @@ def addEventUser(username):
 		addevent = g.db.execute('INSERT INTO events (name, location, description, start, end, calid) values (%s, %s, %s, %s, %s, %s)', title, location, desc, startdaytime, enddaytime, calid)
 		if addevent:
 			message = "Event added succesfully"
-	return flask.render_template("addevent2.html", message=message)
+			return flask.render_template("complete.html", username=username)
+		else:
+			error = "There was an error saving the event, please try again later."
+	return flask.render_template("addevent2.html", error=error)
+
 
 @app.route('/addevent/complete/', methods=["GET", "POST"])
 def completeAddEvent():

@@ -53,7 +53,7 @@ $(document).ready(function() {
 
 	});
 
-	$('#eventDateStart').attr('value', date.getDate());
+	$('#eventDateStart').attr('value', (date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear());
 
 	$("#appendedInputButton").keyup(function() {
 		put("q=" + $(this).val()).complete(function(xhr, textStatus) {
